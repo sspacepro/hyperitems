@@ -1,12 +1,16 @@
 package org.galaxystudios.dungeonCreate;
 
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
 public class LoadEntityElements {
     private final static LoadEntityElements instance = new LoadEntityElements();
-    private File file;
+
     private YamlConfiguration config;
 
     private LoadEntityElements() {
@@ -14,9 +18,11 @@ public class LoadEntityElements {
 
     }
 
-    public void load() {
-        file = new File()
+    public void load() throws IOException, InvalidConfigurationException {
+        InputStream inputStream = LoadEntityElements.class.getResourceAsStream("/EntityElements.yml"))
 
+        Yaml yaml = new Yaml;
+        Map<String, Object> data = yaml.load(inputStream);
 
     }
 
