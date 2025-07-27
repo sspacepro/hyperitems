@@ -1,17 +1,19 @@
 package org.galaxystudios.dungeonCreate;
 
-import org.bukkit.plugin.java.JavaPlugin;
+import org.mineacademy.fo.plugin.SimplePlugin;
 
-public final class DungeonCreate extends JavaPlugin {
+
+public final class DungeonCreate extends SimplePlugin {
 
     @Override
-    public void onEnable() {
-        // Plugin startup logic
+    public void onPluginStart() {
+        getServer().getPluginManager().registerEvents(new MythicMobSpawnListener(), this);
+
 
     }
 
     @Override
-    public void onDisable() {
+    public void onPluginStop() {
         // Plugin shutdown logic
     }
 }
