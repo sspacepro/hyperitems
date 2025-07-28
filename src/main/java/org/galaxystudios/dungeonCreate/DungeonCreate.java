@@ -7,8 +7,14 @@ public final class DungeonCreate extends SimplePlugin {
 
     @Override
     public void onPluginStart() {
+        //Listeners
         getServer().getPluginManager().registerEvents(new MythicMobSpawnListener(), this);
 
+        //commands
+
+
+        //Loading classes
+        LoadEntityElements.getInstance().load();
 
     }
 

@@ -13,6 +13,7 @@
 
     <properties>
         <java.version>21</java.version>
+        <foundation.path>com.github.kangarko</foundation.path>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -46,7 +47,7 @@
                         <includes>
                             <!-- Important: This will ensure only Foundation is shaded to your jar. If you have
                                  other dependencies that should be compiled, duplicate this line for each. -->
-                            <include>com.github.kangarko:Foundation*</include>
+                            <include>${foundation.path}:Foundation*</include>
                         </includes>
                     </artifactSet>
                     <relocations>
