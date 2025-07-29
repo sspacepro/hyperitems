@@ -16,6 +16,9 @@ public final class DungeonCreate extends SimplePlugin {
         //Loading classes
         LoadEntityElements.getInstance().load();
 
+
+        //Files
+        saveResource("EntityElements.yml", false);
     }
 
     @Override

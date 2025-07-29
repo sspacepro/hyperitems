@@ -28,7 +28,7 @@ public class LoadEntityElements {
 
             Yaml yaml = new Yaml();
             Map<String, Object> data = yaml.load(inputStream);
-            Object elementObj = data.get("Element");
+            Object elementObj = data.get("Elements");
 
             if (elementObj instanceof Map<?, ?> rawMap) {
                 for (Map.Entry<?, ?> entry : rawMap.entrySet()) {
