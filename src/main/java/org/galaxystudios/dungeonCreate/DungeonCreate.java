@@ -22,4 +22,10 @@ public final class DungeonCreate extends SimplePlugin {
     public void onPluginStop() {
         // Plugin shutdown logic
     }
+
+    public void onPluginReload() {
+        LoadEntityElements.getInstance().load();
+
+
+    }
 }
