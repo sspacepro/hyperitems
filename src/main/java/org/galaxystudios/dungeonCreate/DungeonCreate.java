@@ -1,5 +1,8 @@
 package org.galaxystudios.dungeonCreate;
 
+import org.galaxystudios.dungeonCreate.Listeners.MythicMobSpawnListener;
+import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
+import org.galaxystudios.dungeonCreate.LoadPlugin.LoadelementBeatsMap;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 
@@ -15,6 +18,7 @@ public final class DungeonCreate extends SimplePlugin {
 
         //Loading classes
         LoadEntityElements.getInstance().load();
+        LoadelementBeatsMap.load();
 
 
         //Files

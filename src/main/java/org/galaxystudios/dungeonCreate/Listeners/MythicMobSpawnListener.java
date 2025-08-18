@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate;
+package org.galaxystudios.dungeonCreate.Listeners;
 
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
@@ -8,6 +8,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
+import org.galaxystudios.dungeonCreate.DungeonCreate;
+import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
 
 import java.util.Map;
 

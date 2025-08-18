@@ -1,6 +1,7 @@
-package org.galaxystudios.dungeonCreate;
+package org.galaxystudios.dungeonCreate.LoadPlugin;
 
 import lombok.Getter;
+import org.galaxystudios.dungeonCreate.DungeonCreate;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
