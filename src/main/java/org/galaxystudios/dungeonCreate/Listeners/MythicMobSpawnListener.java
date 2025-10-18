@@ -11,6 +11,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.galaxystudios.dungeonCreate.DungeonCreate;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
 
+
 import java.util.Map;
 
 public class MythicMobSpawnListener implements Listener {
@@ -21,6 +22,7 @@ public class MythicMobSpawnListener implements Listener {
 
         String mobName = mythicMob.getInternalName().toUpperCase();
         Map<String, String> elementMap = LoadEntityElements.getInstance().getMobElementMap();
+
         String element = elementMap.get(mobName);
         if (element == null) {
             return;

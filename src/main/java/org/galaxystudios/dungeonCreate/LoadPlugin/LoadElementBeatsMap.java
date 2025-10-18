@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LoadelementBeatsMap {
+public class LoadElementBeatsMap {
 
     private static final Map<String, List<String>> elementBeats = new HashMap<>();
 
     // Static load method to populate the map
     public static void load() {
-        elementBeats.clear(); // Optional: clear existing data
+        elementBeats.clear();
         elementBeats.put("Earth", Arrays.asList("Electric", "Toxic"));
         elementBeats.put("Water", Arrays.asList("Lava", "Toxic"));
         elementBeats.put("Lava", Arrays.asList("Ice", "Crystal"));

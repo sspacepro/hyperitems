@@ -19,6 +19,10 @@ public class LoadEntityElements {
 
     }
 
+    public static LoadEntityElements getInstance() {
+        return LoadEntityElements.instance;
+    }
+
     public void load() {
         mobElementMap.clear();
 
@@ -50,4 +54,7 @@ public class LoadEntityElements {
         }
     }
 
+    public Map<String, String> getMobElementMap() {
+        return mobElementMap;
+    }
 }

@@ -1,8 +1,10 @@
 package org.galaxystudios.dungeonCreate;
 
+import org.galaxystudios.dungeonCreate.ElementEquipment.ElementArmor;
+import org.galaxystudios.dungeonCreate.Listeners.DamageDoneListener;
 import org.galaxystudios.dungeonCreate.Listeners.MythicMobSpawnListener;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
-import org.galaxystudios.dungeonCreate.LoadPlugin.LoadelementBeatsMap;
+import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementBeatsMap;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 
@@ -12,13 +14,15 @@ public final class DungeonCreate extends SimplePlugin {
     public void onPluginStart() {
         //Listeners
         getServer().getPluginManager().registerEvents(new MythicMobSpawnListener(), this);
-
+        getServer().getPluginManager().registerEvents(new DamageDoneListener(), this);
         //commands
 
 
         //Loading classes
         LoadEntityElements.getInstance().load();
-        LoadelementBeatsMap.load();
+        LoadElementBeatsMap.load();
+        ElementArmor.register();
+
 
 
         //Files
