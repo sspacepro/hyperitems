@@ -12,7 +12,7 @@
     <name>dungeoncreate</name>
 
     <properties>
-        <java.version>24</java.version>
+        <java.version>21</java.version>
         <foundation.path>com.github.kangarko</foundation.path>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -20,16 +20,20 @@
     <build>
         <defaultGoal>clean package</defaultGoal>
         <plugins>
+
+            <!-- Compile with Java 21 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>24</source>
-                    <target>24</target>
-                    <compilerArgs>--enable-preview</compilerArgs>
+                    <source>21</source>
+                    <target>21</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
+
+            <!-- Shade (Uber Jar) Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -46,8 +50,6 @@
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <artifactSet>
                         <includes>
-                            <!-- Important: This will ensure only Foundation is shaded to your jar. If you have
-                                 other dependencies that should be compiled, duplicate this line for each. -->
                             <include>${foundation.path}:Foundation*</include>
                         </includes>
                     </artifactSet>
@@ -59,7 +61,9 @@
                     </relocations>
                 </configuration>
             </plugin>
+
         </plugins>
+
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -86,7 +90,6 @@
             <name>Lumine Releases</name>
             <url>https://mvn.lumine.io/repository/maven-public/</url>
         </repository>
-
     </repositories>
 
     <dependencies>
@@ -96,17 +99,18 @@
             <version>1.21.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>com.github.kangarko</groupId>
             <artifactId>Foundation</artifactId>
             <version>6.9.22</version>
         </dependency>
+
         <dependency>
             <groupId>io.lumine</groupId>
             <artifactId>Mythic-Dist</artifactId>
             <version>5.6.1</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 </project>

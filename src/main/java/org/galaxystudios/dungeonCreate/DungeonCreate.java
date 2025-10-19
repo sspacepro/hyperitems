@@ -26,6 +26,7 @@ public final class DungeonCreate extends SimplePlugin {
 
 
         //Files
+        // Make it so this will only run on the first start not every time the plugin restarts
         saveResource("EntityElements.yml", false);
     }
 
