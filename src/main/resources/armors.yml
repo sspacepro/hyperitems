@@ -16,6 +16,7 @@ armors:
     attributes:
       armor: 8.0
       toughness: 3.0
+      durability: 1
     stats:
       hp: 6
       damage: 2
@@ -48,6 +49,7 @@ armors:
     attributes:
       armor: 5.0
       toughness: 2.0
+      durability: 1
     stats:
       hp: 4
       damage: 0

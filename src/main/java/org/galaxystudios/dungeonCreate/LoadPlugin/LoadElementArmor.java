@@ -1,5 +1,6 @@
 package org.galaxystudios.dungeonCreate.LoadPlugin;
 
+import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.Component;
@@ -75,6 +76,7 @@ public class LoadElementArmor {
 
                 double armor = section.getDouble("attributes.armor", 0);
                 double toughness = section.getDouble("attributes.toughness", 0);
+                int durability = (int) section.getDouble("attributes.durability", -1);
 
                 CustomStats stats = new CustomStats(
                         section.getDouble("stats.hp", 0),
@@ -89,7 +91,7 @@ public class LoadElementArmor {
                 ConfigurationSection ingredients = section.getConfigurationSection("recipe.ingredients");
 
                 ItemStack result = applyArmorPiece(plugin, material, displayName, nameColor, element, elementColor,
-                        flavor, color, new ArmorTrim(trimMaterial, trimPattern), armor, toughness, stats);
+                        flavor, color, new ArmorTrim(trimMaterial, trimPattern), armor, toughness, stats, durability);
 
                 if (!shape.isEmpty() && ingredients != null) {
                     registerRecipe(plugin, key, result, shape, ingredients);
@@ -114,7 +116,8 @@ public class LoadElementArmor {
             ArmorTrim trim,
             double armor,
             double toughness,
-            CustomStats stats
+            CustomStats stats,
+            int durability
     ) {
         ItemStack item = new ItemStack(material);
         if (!(item.getItemMeta() instanceof ColorableArmorMeta meta)) return item;
@@ -170,6 +173,7 @@ public class LoadElementArmor {
         );
         meta.addAttributeModifier(Attribute.ARMOR_TOUGHNESS, toughnessModifier);
 
+        item.setData(DataComponentTypes.MAX_DAMAGE, durability >= 0 ? durability : material.getMaxDurability());
 
         item.setItemMeta(meta);
         return item;
