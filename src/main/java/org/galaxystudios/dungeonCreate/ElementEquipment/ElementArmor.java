@@ -1,6 +1,7 @@
 package org.galaxystudios.dungeonCreate.ElementEquipment;
 
-import io.papermc.paper.datacomponent.DataComponentTypes;
+/*
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -13,20 +14,22 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.galaxystudios.dungeonCreate.DungeonCreate;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class ElementArmor {
 
     public static void register() {
+        DungeonCreate plugin = (DungeonCreate) DungeonCreate.getInstance();
 
-        NamespacedKey elementKey = new NamespacedKey(DungeonCreate.getInstance(), "elementType");
+        NamespacedKey elementKey = new NamespacedKey(plugin, "elementType");
 
         // ------------------------------------------------------------
-        // Test Diamond
+        // TEST DIAMOND
         // ------------------------------------------------------------
         ItemStack testDiamond = new ItemStack(Material.DIAMOND);
         ItemMeta testMeta = testDiamond.getItemMeta();
@@ -39,135 +42,144 @@ public class ElementArmor {
         testDiamond.setItemMeta(testMeta);
 
         ShapelessRecipe testDiamondRecipe = new ShapelessRecipe(
-                new NamespacedKey(DungeonCreate.getInstance(), "test_diamond"),
+                new NamespacedKey(plugin, "test_diamond"),
                 testDiamond
         );
         testDiamondRecipe.addIngredient(Material.DIAMOND);
         Bukkit.addRecipe(testDiamondRecipe);
 
         // ------------------------------------------------------------
-        // LAVA CHESTPLATE
+        // ELEMENT ARMORS
         // ------------------------------------------------------------
-        ItemStack lavaChestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
-        if (lavaChestplate.getItemMeta() instanceof ColorableArmorMeta meta) {
-            meta.displayName(Component.text("Blazing Coreplate", NamedTextColor.RED)
-                    .decoration(TextDecoration.ITALIC, false));
-            meta.lore(List.of(
-                    Component.text("Element: ", NamedTextColor.GRAY)
-                            .append(Component.text("Lava", NamedTextColor.RED))
-                            .decoration(TextDecoration.ITALIC, false),
-                    Component.text("Forged in molten fury.", NamedTextColor.DARK_RED)
-                            .decoration(TextDecoration.ITALIC, false)
-            ));
-            meta.getPersistentDataContainer().set(elementKey, PersistentDataType.STRING, "lava");
-
-            meta.setColor(Color.fromRGB(255, 80, 0));
-            meta.setTrim(new ArmorTrim(TrimMaterial.REDSTONE, TrimPattern.RAISER));
-
-
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR,
-                    new AttributeModifier(UUID.randomUUID(), "lava_armor_points", 8.0,
-                            AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST));
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS,
-                    new AttributeModifier(UUID.randomUUID(), "lava_toughness", 3.0,
-                            AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.CHEST));
-
-            lavaChestplate.setItemMeta(meta);
-        }
-
-        ShapedRecipe lavaRecipe = new ShapedRecipe(
-                new NamespacedKey(DungeonCreate.getInstance(), "lava_chestplate"),
-                lavaChestplate
+        applyArmorPiece(
+                plugin,
+                Material.LEATHER_CHESTPLATE,
+                "Blazing Coreplate",
+                NamedTextColor.RED,
+                "Lava",
+                NamedTextColor.RED,
+                "Forged in molten fury.",
+                Color.fromRGB(255, 80, 0),
+                new ArmorTrim(TrimMaterial.REDSTONE, TrimPattern.RAISER),
+                8.0, 3.0,
+                new CustomStats(6, 2, 0, 0, 1)
         );
-        lavaRecipe.shape("T T", "TTT", "TTT");
-        lavaRecipe.setIngredient('T', new RecipeChoice.ExactChoice(testDiamond));
-        Bukkit.addRecipe(lavaRecipe);
 
-        // ------------------------------------------------------------
-        // WATER HELMET
-        // ------------------------------------------------------------
-        ItemStack waterHelmet = new ItemStack(Material.LEATHER_HELMET);
-        if (waterHelmet.getItemMeta() instanceof ColorableArmorMeta meta) {
-            meta.displayName(Component.text("Tidewatch Helm", NamedTextColor.AQUA)
-                    .decoration(TextDecoration.ITALIC, false));
-            meta.lore(List.of(
-                    Component.text("Element: ", NamedTextColor.GRAY)
-                            .append(Component.text("Water", NamedTextColor.AQUA))
-                            .decoration(TextDecoration.ITALIC, false),
-                    Component.text("Flowing with calm power.", NamedTextColor.DARK_GRAY)
-                            .decoration(TextDecoration.ITALIC, false)
-            ));
-            meta.getPersistentDataContainer().set(elementKey, PersistentDataType.STRING, "water");
-
-            meta.setColor(Color.fromRGB(0, 128, 255));
-            meta.setTrim(new ArmorTrim(TrimMaterial.LAPIS, TrimPattern.COAST));
-
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR,
-                    new AttributeModifier(UUID.randomUUID(), "water_armor_points", 5.0,
-                            AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD));
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS,
-                    new AttributeModifier(UUID.randomUUID(), "water_toughness", 2.0,
-                            AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HEAD));
-
-            waterHelmet.setItemMeta(meta);
-        }
-
-        ShapedRecipe waterRecipe = new ShapedRecipe(
-                new NamespacedKey(DungeonCreate.getInstance(), "water_helmet"),
-                waterHelmet
+        applyArmorPiece(
+                plugin,
+                Material.LEATHER_HELMET,
+                "Tidewatch Helm",
+                NamedTextColor.AQUA,
+                "Water",
+                NamedTextColor.AQUA,
+                "Flowing with calm power.",
+                Color.fromRGB(0, 128, 255),
+                new ArmorTrim(TrimMaterial.LAPIS, TrimPattern.COAST),
+                5.0, 2.0,
+                new CustomStats(4, 0, 2, 1, 0)
         );
-        waterRecipe.shape("TTT", "T T", "   ");
-        waterRecipe.setIngredient('T', new RecipeChoice.ExactChoice(testDiamond));
-        Bukkit.addRecipe(waterRecipe);
 
-        // ------------------------------------------------------------
-        // AIR LEGGINGS
-        // ------------------------------------------------------------
-        ItemStack airLeggings = new ItemStack(Material.LEATHER_LEGGINGS);
-        if (airLeggings.getItemMeta() instanceof ColorableArmorMeta meta) {
-            meta.displayName(Component.text("Skystride Leggings", NamedTextColor.WHITE)
-                    .decoration(TextDecoration.ITALIC, false));
-            meta.lore(List.of(
-                    Component.text("Element: ", NamedTextColor.GRAY)
-                            .append(Component.text("Air", NamedTextColor.WHITE))
-                            .decoration(TextDecoration.ITALIC, false),
-                    Component.text("Light as the wind itself.", NamedTextColor.DARK_GRAY)
-                            .decoration(TextDecoration.ITALIC, false)
-            ));
-            meta.getPersistentDataContainer().set(elementKey, PersistentDataType.STRING, "air");
-
-            meta.setColor(Color.fromRGB(220, 220, 255));
-            meta.setTrim(new ArmorTrim(TrimMaterial.QUARTZ, TrimPattern.VEX));
-
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR,
-                    new AttributeModifier(UUID.randomUUID(), "air_armor_points", 6.0,
-                            AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS));
-            meta.addAttributeModifier(Attribute.GENERIC_ARMOR_TOUGHNESS,
-                    new AttributeModifier(UUID.randomUUID(), "air_toughness", 1.5,
-                            AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.LEGS));
-
-            airLeggings.setItemMeta(meta);
-        }
-
-        ShapedRecipe airRecipe = new ShapedRecipe(
-                new NamespacedKey(DungeonCreate.getInstance(), "air_leggings"),
-                airLeggings
+        applyArmorPiece(
+                plugin,
+                Material.LEATHER_LEGGINGS,
+                "Skystride Leggings",
+                NamedTextColor.WHITE,
+                "Air",
+                NamedTextColor.WHITE,
+                "Light as the wind itself.",
+                Color.fromRGB(220, 220, 255),
+                new ArmorTrim(TrimMaterial.QUARTZ, TrimPattern.VEX),
+                6.0, 1.5,
+                new CustomStats(3, 0, 1, 3, 0)
         );
-        airRecipe.shape("TTT", "T T", "T T");
-        airRecipe.setIngredient('T', new RecipeChoice.ExactChoice(testDiamond));
-        Bukkit.addRecipe(airRecipe);
 
-        // ------------------------------------------------------------
-        // EARTH BOOTS
-        // ------------------------------------------------------------
-        ItemStack earthBoots = new ItemStack(Material.LEATHER_BOOTS);
-        if (earthBoots.getItemMeta() instanceof ColorableArmorMeta meta) {
-            meta.displayName(Component.text("Rootbound Greaves", NamedTextColor.GREEN)
-                    .decoration(TextDecoration.ITALIC, false));
-            meta.lore(List.of(
-                    Component.text("Element: ", NamedTextColor.GRAY)
-                            .append(Component.text("Earth", NamedTextColor.GREEN))
-                            .decoration(TextDecoration.ITALIC, false),
-                    Component.text("Grounded and unyielding.", NamedTextColor.DARK_GRAY)
-                            .decoration(TextDecoration.ITALIC, false)
-            ));
+        applyArmorPiece(
+                plugin,
+                Material.LEATHER_BOOTS,
+                "Rootbound Greaves",
+                NamedTextColor.GREEN,
+                "Earth",
+                NamedTextColor.GREEN,
+                "Grounded and unyielding.",
+                Color.fromRGB(50, 160, 50),
+                new ArmorTrim(TrimMaterial.EMERALD, TrimPattern.WARD),
+                4.0, 1.0,
+                new CustomStats(5, 1, 1, 0, 0)
+        );
+    }
+
+    private static void applyArmorPiece(
+            DungeonCreate plugin,
+            Material material,
+            String displayName,
+            NamedTextColor displayColor,
+            String elementName,
+            NamedTextColor elementColor,
+            String flavorText,
+            Color color,
+            ArmorTrim trim,
+            double armor,
+            double toughness,
+            CustomStats stats
+    ) {
+        ItemStack item = new ItemStack(material);
+        if (!(item.getItemMeta() instanceof ColorableArmorMeta meta)) return;
+
+        // Display name & base lore
+        meta.displayName(Component.text(displayName, displayColor).decoration(TextDecoration.ITALIC, false));
+
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Element: ", NamedTextColor.GRAY)
+                .append(Component.text(elementName, elementColor))
+                .decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text(flavorText, NamedTextColor.DARK_GRAY)
+                .decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text(" "));
+
+        // Stat Lore
+        lore.add(Component.text("Stats:", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
+        lore.add(Component.text("♥ Health: +" + stats.hp(), NamedTextColor.RED));
+        lore.add(Component.text("⚔ Damage: +" + stats.damage(), NamedTextColor.DARK_RED));
+        lore.add(Component.text("☘ Luck: +" + stats.luck(), NamedTextColor.GREEN));
+        lore.add(Component.text("✦ Speed: +" + stats.speed(), NamedTextColor.AQUA));
+        lore.add(Component.text("❤ Lifesteal: +" + stats.lifesteal() + "%", NamedTextColor.LIGHT_PURPLE));
+
+        meta.lore(lore);
+
+        // Persistent data
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(new NamespacedKey(plugin, "elementType"), PersistentDataType.STRING, elementName.toLowerCase());
+        data.set(new NamespacedKey(plugin, "hp"), PersistentDataType.DOUBLE, stats.hp());
+        data.set(new NamespacedKey(plugin, "damage"), PersistentDataType.DOUBLE, stats.damage());
+        data.set(new NamespacedKey(plugin, "luck"), PersistentDataType.DOUBLE, stats.luck());
+        data.set(new NamespacedKey(plugin, "speed"), PersistentDataType.DOUBLE, stats.speed());
+        data.set(new NamespacedKey(plugin, "lifesteal"), PersistentDataType.DOUBLE, stats.lifesteal());
+
+        // Armor color & trim
+        meta.setColor(color);
+        meta.setTrim(trim);
+
+        // Base armor attributes
+        meta.addAttributeModifier(Attribute.ARMOR,
+                new AttributeModifier(new NamespacedKey(plugin, displayName.toLowerCase() + "_armor"),
+                        armor, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR));
+        meta.addAttributeModifier(Attribute.ARMOR_TOUGHNESS,
+                new AttributeModifier(new NamespacedKey(plugin, displayName.toLowerCase() + "_toughness"),
+                        toughness, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlotGroup.ARMOR));
+
+        item.setItemMeta(meta);
+
+        // Register recipe
+        ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, displayName.toLowerCase().replace(" ", "_")), item);
+        recipe.shape("TTT", "TTT", "TTT");
+        recipe.setIngredient('T', Material.DIAMOND);
+        Bukkit.addRecipe(recipe);
+    }
+
+    // ------------------------------------------------------------
+    // Custom stat container
+    // ------------------------------------------------------------
+    private record CustomStats(double hp, double damage, double luck, double speed, double lifesteal) {}
+}
+
+*/

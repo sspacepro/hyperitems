@@ -1,0 +1,62 @@
+armors:
+  blazing_coreplate:
+    material: LEATHER_CHESTPLATE
+    name: "&4Blazing_Coreplate"
+    nameColor: RED
+    element: "Lava"
+    elementColor: RED
+    flavor: "Forged in molten fury."
+    color:
+      r: 255
+      g: 80
+      b: 0
+    trim:
+      material: REDSTONE
+      pattern: RAISER
+    attributes:
+      armor: 8.0
+      toughness: 3.0
+    stats:
+      hp: 6
+      damage: 2
+      luck: 0
+      speed: 0
+      lifesteal: 1
+    recipe:
+      shape:
+        - "LDL"
+        - "L L"
+        - " L "
+      ingredients:
+        L: LAVA_BUCKET
+        D: DIAMOND
+
+  tidewatch_helm:
+    material: LEATHER_HELMET
+    name: "&9Tidewatch_Helm"
+    nameColor: AQUA
+    element: "Water"
+    elementColor: AQUA
+    flavor: "Flowing with calm power."
+    color:
+      r: 0
+      g: 128
+      b: 255
+    trim:
+      material: LAPIS
+      pattern: COAST
+    attributes:
+      armor: 5.0
+      toughness: 2.0
+    stats:
+      hp: 4
+      damage: 0
+      luck: 2
+      speed: 1
+      lifesteal: 0
+    recipe:
+      shape:
+        - "LLL"
+        - "L L"
+      ingredients:
+        L: LAPIS_LAZULI
