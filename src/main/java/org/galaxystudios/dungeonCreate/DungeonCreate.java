@@ -4,6 +4,7 @@ package org.galaxystudios.dungeonCreate;
 import org.galaxystudios.dungeonCreate.Listeners.DamageDoneListener;
 import org.galaxystudios.dungeonCreate.Listeners.MythicMobSpawnListener;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementArmor;
+import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementWeapons;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementBeatsMap;
 import org.mineacademy.fo.plugin.SimplePlugin;
@@ -23,6 +24,7 @@ public final class DungeonCreate extends SimplePlugin {
         LoadEntityElements.getInstance().load();
         LoadElementBeatsMap.load();
         LoadElementArmor.register();
+        LoadElementWeapons.register();
 
 
 
@@ -30,6 +32,7 @@ public final class DungeonCreate extends SimplePlugin {
         // Make it so this will only run on the first start not every time the plugin restarts
         saveResource("EntityElements.yml", false);
         saveResource("armors.yml",false);
+        saveResource("weapons.yml",false);
     }
 
     @Override
@@ -39,6 +42,8 @@ public final class DungeonCreate extends SimplePlugin {
 
     public void onPluginReload() {
         LoadEntityElements.getInstance().load();
+        LoadElementArmor.register();
+        LoadElementWeapons.register();
 
 
     }

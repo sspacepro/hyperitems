@@ -1,0 +1,56 @@
+weapons:
+  flame_sword:
+    material: DIAMOND_SWORD
+    name: "&cFlame Sword"
+    nameColor: RED
+    element: Fire
+    elementColor: GOLD
+    flavor: "Forged in dragonfire."
+
+    attributes:
+      damage: 8.0
+      attackSpeed: -2.2
+      durability: 1500
+
+    stats:
+      damage: 3
+      luck: 1
+      speed: 0.5
+      lifesteal: 5
+
+    recipe:
+      shape:
+        - " F "
+        - " F "
+        - " S "
+      ingredients:
+        F: BLAZE_POWDER
+        S: STICK
+
+  frost_axe:
+    material: IRON_AXE
+    name: "&bFrost Axe"
+    nameColor: AQUA
+    element: Ice
+    elementColor: BLUE
+    flavor: "Chilled to the touch."
+
+    attributes:
+      damage: 9.0
+      attackSpeed: -3.0
+      durability: 1000
+
+    stats:
+      damage: 4
+      luck: 0
+      speed: 0.3
+      lifesteal: 2
+
+    recipe:
+      shape:
+        - "II "
+        - "IS "
+        - " S "
+      ingredients:
+        I: PACKED_ICE
+        S: STICK

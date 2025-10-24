@@ -1,8 +1,6 @@
 package org.galaxystudios.dungeonCreate.LoadPlugin;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
-import io.papermc.paper.registry.RegistryAccess;
-import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -14,39 +12,36 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.ArmorMeta;
-import org.bukkit.inventory.meta.ColorableArmorMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.trim.ArmorTrim;
-import org.bukkit.inventory.meta.trim.TrimMaterial;
-import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.galaxystudios.dungeonCreate.DungeonCreate;
-
 import java.io.File;
 import java.util.*;
 
-public class LoadElementArmor {
+import static java.lang.System.getLogger;
+
+public class LoadElementWeapons {
 
     public static void register() {
         DungeonCreate plugin = (DungeonCreate) DungeonCreate.getInstance();
 
-        File file = new File(plugin.getDataFolder(), "armors.yml");
+        File file = new File(plugin.getDataFolder(), "weapons.yml");
         if (!file.exists()) {
-            plugin.saveResource("armors.yml", false);
+            plugin.saveResource("weapons.yml", false);
         }
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection armors = config.getConfigurationSection("armors");
-        if (armors == null) return;
+        ConfigurationSection weapons = config.getConfigurationSection("weapons");
+        if (weapons == null) return;
 
-        for (String key : armors.getKeys(false)) {
-            ConfigurationSection section = armors.getConfigurationSection(key);
+        for (String key : weapons.getKeys(false)) {
+            ConfigurationSection section = weapons.getConfigurationSection(key);
             if (section == null) continue;
 
             try {
-                Material material = Material.valueOf(section.getString("material", "LEATHER_CHESTPLATE").toUpperCase());
+                // Basic Info
+                Material material = Material.valueOf(section.getString("material", "IRON_SWORD").toUpperCase());
                 String displayName = section.getString("name", key);
 
                 NamedTextColor nameColor = Optional.ofNullable(
@@ -60,28 +55,13 @@ public class LoadElementArmor {
 
                 String flavor = section.getString("flavor", "");
 
-                Color color = Color.fromRGB(
-                        section.getInt("color.r", 255),
-                        section.getInt("color.g", 0),
-                        section.getInt("color.b", 255)
-                );
-
-                TrimPattern trimPattern = RegistryAccess.registryAccess()
-                        .getRegistry(RegistryKey.TRIM_PATTERN)
-                        .get(NamespacedKey.minecraft(section.getString("trim.trimPattern", "coast").toLowerCase()));
-                if (trimPattern == null) trimPattern = TrimPattern.RAISER;
-
-                TrimMaterial trimMaterial = RegistryAccess.registryAccess()
-                        .getRegistry(RegistryKey.TRIM_MATERIAL)
-                        .get(NamespacedKey.minecraft(section.getString("trim.material", "amethyst").toLowerCase()));
-                if (trimMaterial == null) trimMaterial = TrimMaterial.REDSTONE;
-
-                double armor = section.getDouble("attributes.armor", 0);
-                double toughness = section.getDouble("attributes.toughness", 0);
+                // Attributes
+                double damage = section.getDouble("attributes.damage", 0);
+                double attackSpeed = section.getDouble("attributes.attackSpeed", 0);
                 int durability = (int) section.getDouble("attributes.durability", -1);
 
+                // Custom Stats
                 CustomStats stats = new CustomStats(
-                        section.getDouble("stats.hp", 0),
                         section.getDouble("stats.damage", 0),
                         section.getDouble("stats.luck", 0),
                         section.getDouble("stats.speed", 0),
@@ -92,7 +72,7 @@ public class LoadElementArmor {
                 List<String> shape = section.getStringList("recipe.shape");
                 ConfigurationSection ingredients = section.getConfigurationSection("recipe.ingredients");
 
-                ItemStack result = applyArmorPiece(
+                ItemStack result = applyWeaponItem(
                         plugin,
                         material,
                         displayName,
@@ -100,10 +80,8 @@ public class LoadElementArmor {
                         element,
                         elementColor,
                         flavor,
-                        color,
-                        new ArmorTrim(trimMaterial, trimPattern),
-                        armor,
-                        toughness,
+                        damage,
+                        attackSpeed,
                         stats,
                         durability
                 );
@@ -112,14 +90,14 @@ public class LoadElementArmor {
                     registerRecipe(plugin, key, result, shape, ingredients);
                 }
 
-                Bukkit.getLogger().info("Loaded custom armor: " + displayName);
+                Bukkit.getLogger().info("Loaded custom weapon: " + displayName);
             } catch (Exception e) {
-                Bukkit.getLogger().warning("Failed to load armor '" + key + "': " + e.getMessage());
+                Bukkit.getLogger().warning("Failed to load weapon '" + key + "': " + e.getMessage());
             }
         }
     }
 
-    private static ItemStack applyArmorPiece(
+    private static ItemStack applyWeaponItem(
             DungeonCreate plugin,
             Material material,
             String displayName,
@@ -127,24 +105,17 @@ public class LoadElementArmor {
             String elementName,
             NamedTextColor elementColor,
             String flavorText,
-            Color color,
-            ArmorTrim trim,
-            double armor,
-            double toughness,
+            double damage,
+            double attackSpeed,
             CustomStats stats,
             int durability
     ) {
         ItemStack item = new ItemStack(material);
-        ItemMeta baseMeta = item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
 
-        if (baseMeta instanceof ColorableArmorMeta colorMeta) {
-            colorMeta.setColor(color);
-            baseMeta = colorMeta;
-        }
-
-        // Name
+        // Display Name
         Component displayNameComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(displayName);
-        baseMeta.displayName(displayNameComponent.decoration(TextDecoration.ITALIC, false));
+        meta.displayName(displayNameComponent.decoration(TextDecoration.ITALIC, false));
 
         // Lore
         List<Component> lore = new ArrayList<>();
@@ -157,54 +128,48 @@ public class LoadElementArmor {
         }
         lore.add(Component.text(" "));
         lore.add(Component.text("Stats:", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
-        lore.add(Component.text("♥ Health: +" + stats.hp(), NamedTextColor.RED));
         lore.add(Component.text("⚔ Damage: +" + stats.damage(), NamedTextColor.DARK_RED));
         lore.add(Component.text("☘ Luck: +" + stats.luck(), NamedTextColor.GREEN));
         lore.add(Component.text("✦ Speed: +" + stats.speed(), NamedTextColor.AQUA));
         lore.add(Component.text("❤ Lifesteal: +" + stats.lifesteal() + "%", NamedTextColor.LIGHT_PURPLE));
-        baseMeta.lore(lore);
+        meta.lore(lore);
 
         // Persistent Data
-        PersistentDataContainer data = baseMeta.getPersistentDataContainer();
+        PersistentDataContainer data = meta.getPersistentDataContainer();
         data.set(new NamespacedKey(plugin, "elementType"), PersistentDataType.STRING, elementName.toLowerCase());
-        data.set(new NamespacedKey(plugin, "hp"), PersistentDataType.DOUBLE, stats.hp());
         data.set(new NamespacedKey(plugin, "damage"), PersistentDataType.DOUBLE, stats.damage());
         data.set(new NamespacedKey(plugin, "luck"), PersistentDataType.DOUBLE, stats.luck());
         data.set(new NamespacedKey(plugin, "speed"), PersistentDataType.DOUBLE, stats.speed());
         data.set(new NamespacedKey(plugin, "lifesteal"), PersistentDataType.DOUBLE, stats.lifesteal());
 
-        // Armor Trim (only works for ArmorMeta)
-        if (baseMeta instanceof ArmorMeta armorMeta) {
-            armorMeta.setTrim(trim);
-        }
-
-        // Safe Namespaced Keys
+        // Attributes
         String safeKey = displayName.toLowerCase().replaceAll("[^a-z0-9_.-]", "_");
 
-        // Armor Attribute
-        NamespacedKey armorKey = new NamespacedKey(plugin, safeKey + "_armor");
-        AttributeModifier armorModifier = new AttributeModifier(
-                armorKey,
-                armor,
+        // Damage
+        NamespacedKey dmgKey = new NamespacedKey(plugin, safeKey + "_attack_damage");
+        AttributeModifier dmgModifier = new AttributeModifier(
+                dmgKey,
+                damage,
                 AttributeModifier.Operation.ADD_NUMBER,
-                EquipmentSlotGroup.ARMOR
+                EquipmentSlotGroup.MAINHAND
         );
-        baseMeta.addAttributeModifier(Attribute.ARMOR, armorModifier);
+        meta.addAttributeModifier(Attribute.ATTACK_DAMAGE, dmgModifier);
 
-        // Toughness Attribute
-        NamespacedKey toughnessKey = new NamespacedKey(plugin, safeKey + "_toughness");
-        AttributeModifier toughnessModifier = new AttributeModifier(
-                toughnessKey,
-                toughness,
+        // Attack Speed
+        NamespacedKey speedKey = new NamespacedKey(plugin, safeKey + "_attack_speed");
+        AttributeModifier speedModifier = new AttributeModifier(
+                speedKey,
+                attackSpeed,
                 AttributeModifier.Operation.ADD_NUMBER,
-                EquipmentSlotGroup.ARMOR
+                EquipmentSlotGroup.MAINHAND
         );
-        baseMeta.addAttributeModifier(Attribute.ARMOR_TOUGHNESS, toughnessModifier);
+        meta.addAttributeModifier(Attribute.ATTACK_SPEED, speedModifier);
 
+        item.setItemMeta(meta);
 
-        item.setItemMeta(baseMeta);
         // Durability
         item.setData(DataComponentTypes.MAX_DAMAGE, durability >= 0 ? durability : material.getMaxDurability());
+
         return item;
     }
 
@@ -227,5 +192,6 @@ public class LoadElementArmor {
         }
     }
 
-    private record CustomStats(double hp, double damage, double luck, double speed, double lifesteal) {}
+    private record CustomStats(double damage, double luck, double speed, double lifesteal) {}
 }
+

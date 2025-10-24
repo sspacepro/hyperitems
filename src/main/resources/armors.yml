@@ -5,7 +5,7 @@ armors:
     nameColor: RED
     element: "Lava"
     elementColor: RED
-    flavor: "Forged in molten fury."
+    flavor: "Cool ability."
     color:
       r: 255
       g: 80
@@ -38,7 +38,7 @@ armors:
     nameColor: AQUA
     element: "Water"
     elementColor: AQUA
-    flavor: "Flowing with calm power."
+    flavor: "Cool ability."
     color:
       r: 0
       g: 128
