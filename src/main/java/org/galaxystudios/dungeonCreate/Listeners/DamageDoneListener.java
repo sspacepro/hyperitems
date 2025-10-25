@@ -1,12 +1,21 @@
-// language: java
 package org.galaxystudios.dungeonCreate.Listeners;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Projectile;
+import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import org.galaxystudios.dungeonCreate.DungeonCreate;
+import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
+import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementBeatsMap;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
 
 public class DamageDoneListener implements Listener {
 
@@ -19,21 +28,180 @@ public class DamageDoneListener implements Listener {
 
         LivingEntity attacker = null;
 
+        // Handle projectile shooters
         if (damager instanceof Projectile projectile) {
-            if (projectile.getShooter() instanceof LivingEntity) {
-                attacker = (LivingEntity) projectile.getShooter();
+            if (projectile.getShooter() instanceof LivingEntity livingShooter) {
+                attacker = livingShooter;
             }
-        } else if (damager instanceof LivingEntity) {
-            attacker = (LivingEntity) damager;
+        } else if (damager instanceof LivingEntity living) {
+            attacker = living;
         }
 
         if (attacker == null) return;
 
-        double damage = event.getFinalDamage();
+        double baseDamage = event.getFinalDamage();
+
+        // --- Get attacker and target stats ---
+        EntityStats attackerStats = getEntityStats(attacker);
+        EntityStats targetStats = getEntityStats(target);
 
 
+        // --- Elemental Multiplier ---
+        double elementMultiplier;
+        if (attacker instanceof Player player) {
+            elementMultiplier = calculatePlayerAttackMultiplier(player, target, targetStats.elements);
+        } else {
+            elementMultiplier = calculateMobMultiplier(attackerStats.elements, targetStats.elements);
+        }
 
+        double damage = baseDamage * elementMultiplier;
+
+        // --- Player lifesteal, damage bonus, critical ---
+        if (attacker instanceof Player player) {
+
+            // Weapon/gear damage bonus
+            double potentialDamage = damage + attackerStats.damage;
+
+            // Critical hit
+            double critChance = attackerStats.luck;
+            double critMultiplier = 4.0;
+            boolean isCrit = Math.random() * 100 < critChance;
+            damage = isCrit ? potentialDamage * critMultiplier : potentialDamage;
+
+            // Lifesteal
+            if (attackerStats.lifesteal > 0) {
+                double heal = damage * (attackerStats.lifesteal / 100.0);
+                double newHealth = Math.min(player.getHealth() + heal,
+                        Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue());
+                player.setHealth(newHealth);
+            }
+        }
+
+        // --- Set final damage ---
         event.setDamage(damage);
     }
 
+    // --- Calculate player attack multiplier (weighted by target elements) ---
+    private double calculatePlayerAttackMultiplier(Player attacker, LivingEntity target, Set<String> targetElements) {
+        Map<String, List<String>> beatsMap = LoadElementBeatsMap.getElementBeatsMap();
+
+        // Weapon only
+        ItemStack weapon = attacker.getInventory().getItemInMainHand();
+        if (weapon.isEmpty() || !weapon.hasItemMeta()) return 1.0;
+
+        String weaponElement = weapon.getItemMeta().getPersistentDataContainer()
+                .get(new NamespacedKey(DungeonCreate.getInstance(), "elementType"), PersistentDataType.STRING);
+        if (weaponElement == null) return 1.0;
+
+        // Determine fraction per element
+        double fraction = target instanceof Player ? 0.25 : 1.0;
+
+        double multiplier = 1.0;
+
+        for (String tElem : targetElements) {
+            List<String> weaponBeats = beatsMap.getOrDefault(weaponElement, Collections.emptyList());
+            List<String> targetBeats = beatsMap.getOrDefault(tElem, Collections.emptyList());
+
+            if (weaponBeats.contains(tElem) && !targetBeats.contains(weaponElement)) {
+                multiplier += fraction; // advantage
+            } else if (targetBeats.contains(weaponElement) && !weaponBeats.contains(tElem)) {
+                multiplier -= fraction; // disadvantage
+            }
+            // else neutral → no change
+        }
+
+        return Math.max(0.5, Math.min(2.0, multiplier));
+    }
+
+    // --- Mob vs anything multiplier (full 2x / 0.5x) ---
+    private double calculateMobMultiplier(Set<String> attackerElements, Set<String> targetElements) {
+        Map<String, List<String>> beatsMap = LoadElementBeatsMap.getElementBeatsMap();
+
+        boolean attackerAdvantage = false;
+        boolean targetAdvantage = false;
+
+        for (String aElem : attackerElements) {
+            List<String> beats = beatsMap.getOrDefault(aElem, Collections.emptyList());
+            for (String tElem : targetElements) {
+                if (beats.contains(tElem)) {
+                    attackerAdvantage = true;
+                    break;
+                }
+            }
+        }
+
+        for (String tElem : targetElements) {
+            List<String> beats = beatsMap.getOrDefault(tElem, Collections.emptyList());
+            for (String aElem : attackerElements) {
+                if (beats.contains(aElem)) {
+                    targetAdvantage = true;
+                    break;
+                }
+            }
+        }
+
+        if (attackerAdvantage && !targetAdvantage) return 2.0;
+        if (targetAdvantage && !attackerAdvantage) return 0.5;
+        return 1.0;
+    }
+
+    // --- Gather stats from entity ---
+    private EntityStats getEntityStats(LivingEntity entity) {
+        LoadEntityElements loader = LoadEntityElements.getInstance();
+
+        if (!(entity instanceof Player player)) {
+            // Mob: element only
+            String mobElement = loader.getMobElementMap().getOrDefault(entity.getType().name(), "None");
+            Set<String> elements = new HashSet<>();
+            if (!mobElement.equalsIgnoreCase("None")) elements.add(mobElement);
+            return new EntityStats(0, 0, 0, elements);
+        }
+
+        // Player stats (damage, luck, lifesteal)
+        double totalDamage = 0;
+        double totalLuck = 0;
+        double totalLifesteal = 0;
+        Set<String> elements = new HashSet<>();
+
+        // Weapon only
+        ItemStack mainHand = player.getInventory().getItemInMainHand();
+        if (!mainHand.isEmpty() && mainHand.hasItemMeta()) {
+            PersistentDataContainer data = mainHand.getItemMeta().getPersistentDataContainer();
+            totalDamage += data.getOrDefault(key("damage"), PersistentDataType.DOUBLE, 0.0);
+            totalLuck += data.getOrDefault(key("luck"), PersistentDataType.DOUBLE, 0.0);
+            totalLifesteal += data.getOrDefault(key("lifesteal"), PersistentDataType.DOUBLE, 0.0);
+
+            String mainElement = data.get(key("elementType"), PersistentDataType.STRING);
+            if (mainElement != null) elements.add(mainElement);
+        }
+
+        // Armor pieces (for element only)
+        for (EquipmentSlot slot : new EquipmentSlot[]{
+                EquipmentSlot.HEAD, EquipmentSlot.CHEST,
+                EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
+
+            ItemStack armorPiece = player.getInventory().getItem(slot);
+            if (armorPiece.isEmpty() || !armorPiece.hasItemMeta()) continue;
+
+            String pieceElement = armorPiece.getItemMeta().getPersistentDataContainer()
+                    .get(key("elementType"), PersistentDataType.STRING);
+            if (pieceElement != null && !Objects.equals(pieceElement, "None")) {
+                elements.add(pieceElement);
+            }
+        }
+
+        return new EntityStats(totalDamage, totalLuck, totalLifesteal, elements);
+    }
+
+    private NamespacedKey key(String name) {
+        return new NamespacedKey(DungeonCreate.getInstance(), name);
+    }
+
+    private record EntityStats(double damage, double luck, double lifesteal, Set<String> elements) {
+        @Override
+        public @NotNull String toString() {
+            return "Damage=" + damage + ", Luck=" + luck + ", Lifesteal=" + lifesteal +
+                    ", Elements=" + elements;
+        }
+    }
 }
