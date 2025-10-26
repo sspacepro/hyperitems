@@ -3,6 +3,7 @@ package org.galaxystudios.dungeonCreate;
 
 import org.galaxystudios.dungeonCreate.Listeners.DamageDoneListener;
 import org.galaxystudios.dungeonCreate.Listeners.MythicMobSpawnListener;
+import org.galaxystudios.dungeonCreate.Listeners.PlayerStatUpdateListener;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementArmor;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementWeapons;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
@@ -17,6 +18,8 @@ public final class DungeonCreate extends SimplePlugin {
         //Listeners
         getServer().getPluginManager().registerEvents(new MythicMobSpawnListener(), this);
         getServer().getPluginManager().registerEvents(new DamageDoneListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerStatUpdateListener(this), this);
+
         //commands
 
 
