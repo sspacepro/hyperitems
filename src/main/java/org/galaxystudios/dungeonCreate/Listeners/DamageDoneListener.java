@@ -1,5 +1,6 @@
 package org.galaxystudios.dungeonCreate.Listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -14,6 +15,7 @@ import org.galaxystudios.dungeonCreate.DungeonCreate;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementBeatsMap;
 import org.jetbrains.annotations.NotNull;
+import net.kyori.adventure.text.Component;
 
 import java.util.*;
 
@@ -56,6 +58,9 @@ public class DamageDoneListener implements Listener {
 
         double damage = baseDamage * elementMultiplier;
 
+        // isCritical Hit?
+        double critChance = attackerStats.luck;
+        boolean isCrit = Math.random() * 100 < critChance;
         // --- Player lifesteal, damage bonus, critical ---
         if (attacker instanceof Player player) {
 
@@ -63,9 +68,7 @@ public class DamageDoneListener implements Listener {
             double potentialDamage = damage + attackerStats.damage;
 
             // Critical hit
-            double critChance = attackerStats.luck;
             double critMultiplier = 4.0;
-            boolean isCrit = Math.random() * 100 < critChance;
             damage = isCrit ? potentialDamage * critMultiplier : potentialDamage;
 
             // Lifesteal
@@ -79,6 +82,47 @@ public class DamageDoneListener implements Listener {
 
         // --- Set final damage ---
         event.setDamage(damage);
+
+        if (attacker instanceof Player player) {
+
+
+            String color = isCrit ? "§e§l" : "§c";
+            String symbol = isCrit ? "✦" : "❤";
+
+            // Spawn invisible armor stand
+            ArmorStand stand = (ArmorStand) target.getWorld().spawnEntity(
+                    target.getLocation().add(0, target.getHeight() + 0.5, 0),
+                    EntityType.ARMOR_STAND
+            );
+
+            stand.setInvisible(true);
+            stand.setCustomNameVisible(true);
+            stand.setMarker(true);
+            stand.setSmall(true);
+            stand.setGravity(false);
+            stand.customName(Component.text(color + "-" + String.format("%.1f%s", damage, symbol)));
+            stand.setCustomNameVisible(true);
+
+            // Optional: float-up animation
+            Bukkit.getScheduler().runTaskTimer(DungeonCreate.getInstance(), task -> {
+                if (!stand.isValid()) {
+                    task.cancel();
+                    return;
+                }
+                stand.teleport(stand.getLocation().add(0, 0.05, 0)); // move slightly upward
+            }, 0L, 1L);
+
+            // Remove after 1 second
+            Bukkit.getScheduler().runTaskLater(DungeonCreate.getInstance(), () -> {
+                if (stand.isValid()) stand.remove();
+            }, 30L);
+
+            // Optional: sound feedback for crits
+            if (isCrit) {
+                player.playSound(player.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_ATTACK_CRIT, 1f, 1.2f);
+            }
+        }
+
     }
 
     // --- Calculate player attack multiplier (weighted by target elements) ---
