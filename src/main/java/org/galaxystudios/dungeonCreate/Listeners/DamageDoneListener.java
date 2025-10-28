@@ -64,11 +64,11 @@ public class DamageDoneListener implements Listener {
         // --- Player lifesteal, damage bonus, critical ---
         if (attacker instanceof Player player) {
 
-            // Weapon/gear damage bonus
-            double potentialDamage = damage + attackerStats.damage;
+            // damage = base damage + (base damage * (damage stat / 20))
+            double potentialDamage = damage * (1 + (attackerStats.damage / 20.0));
 
-            // Critical hit
-            double critMultiplier = 4.0;
+            // Critical hit multiplier
+            double critMultiplier = 3;
             damage = isCrit ? potentialDamage * critMultiplier : potentialDamage;
 
             // Lifesteal
