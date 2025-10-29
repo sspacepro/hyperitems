@@ -1,6 +1,7 @@
 package org.galaxystudios.dungeonCreate;
 
 
+import org.galaxystudios.dungeonCreate.Listeners.BlockTrimmingLeatherListener;
 import org.galaxystudios.dungeonCreate.Listeners.DamageDoneListener;
 import org.galaxystudios.dungeonCreate.Listeners.MythicMobSpawnListener;
 import org.galaxystudios.dungeonCreate.Listeners.PlayerStatUpdateListener;
@@ -19,7 +20,7 @@ public final class DungeonCreate extends SimplePlugin {
         getServer().getPluginManager().registerEvents(new MythicMobSpawnListener(), this);
         getServer().getPluginManager().registerEvents(new DamageDoneListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerStatUpdateListener(this), this);
-
+        getServer().getPluginManager().registerEvents(new BlockTrimmingLeatherListener(this), this);
         //commands
 
 
