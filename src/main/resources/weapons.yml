@@ -54,3 +54,32 @@ weapons:
       ingredients:
         I: PACKED_ICE
         S: STICK
+
+
+  just_dead:
+    material: WOODEN_SWORD
+    name: "&7Just Dead"
+    nameColor: WHITE
+    element: Crystal
+    elementColor: DARK_GRAY
+    flavor: "A blade that whispers of the light."
+
+    attributes:
+      damage: 999.0
+      attackSpeed: -2.4
+      durability: 4
+
+    stats:
+      damage: 99
+      luck: 100
+      speed: 10.0
+      lifesteal: 100
+
+    recipe:
+      shape:
+        - " m "
+        - " m "
+        - " S "
+      ingredients:
+        m: magic_dust
+        S: STICK

@@ -1,0 +1,30 @@
+drops:
+  LavaDemon:
+    drop1:
+      item: GLOWSTONE_DUST
+      chance: 50
+      amount: 2
+    drop2:
+      item: GLOWSTONE_DUST
+      chance: 30
+      amount: 1
+    drop3:
+      item: NOTHING
+      chance: 20
+      amount: 0
+
+  LavaGolem:
+    treasure:
+      item: GLOWSTONE_DUST
+      chance: 80
+      amount: 3
+    rare:
+      item: GLOWSTONE_DUST
+      chance: 10
+      amount: 1
+
+  LavaImp:
+    common:
+      item: GLOWSTONE_DUST
+      chance: 70
+      amount: 4

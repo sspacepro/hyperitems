@@ -19,7 +19,6 @@ import org.galaxystudios.dungeonCreate.DungeonCreate;
 import java.io.File;
 import java.util.*;
 
-import static java.lang.System.getLogger;
 
 public class LoadElementWeapons {
 

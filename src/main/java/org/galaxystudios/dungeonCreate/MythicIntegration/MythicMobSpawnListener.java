@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate.Listeners;
+package org.galaxystudios.dungeonCreate.MythicIntegration;
 
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;

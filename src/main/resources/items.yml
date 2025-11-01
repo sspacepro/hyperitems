@@ -1,0 +1,34 @@
+items:
+  magic_dust:
+    material: GLOWSTONE_DUST
+    name: "&eMagic Dust"
+    lore:
+      - "&7A shimmering powder used in crafting."
+    recipe:
+      type: crafting
+      shape:
+        - "GGG"
+        - "GSG"
+        - "GGG"
+      ingredients:
+        G: GLOWSTONE_DUST
+        S: SUGAR
+
+  molten_ingot:
+    material: IRON_INGOT
+    name: "&6Molten Ingot"
+    lore:
+      - "&7Smelted from the purest ores."
+    recipe:
+      type: furnace
+      input: RAW_IRON
+      experience: 0.5
+      time: 200
+
+  upgraded_core:
+    material: NETHER_STAR
+    name: "&dUpgraded Core"
+    recipe:
+      type: smithing
+      base: DIAMOND
+      addition: NETHER_STAR
