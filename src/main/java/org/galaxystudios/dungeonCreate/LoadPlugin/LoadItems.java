@@ -22,7 +22,7 @@ import java.util.*;
  */
 public class LoadItems {
 
-    private static final Map<String, ItemStack> loadedItems = new HashMap<>();
+    public static final Map<String, ItemStack> loadedItems = new HashMap<>();
 
     public static void registerCustomItem(String key, ItemStack item) {
         if (key == null || item == null) return;
@@ -35,6 +35,7 @@ public class LoadItems {
         ItemStack item = loadedItems.get(key.toLowerCase());
         return item != null ? item.clone() : null;
     }
+
 
     /** Retrieve a Material or custom item from a string key. */
     public static ItemStack resolveItem(String name) {

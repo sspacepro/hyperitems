@@ -8,16 +8,26 @@ import org.galaxystudios.dungeonCreate.Listeners.DamageDoneListener;
 import org.galaxystudios.dungeonCreate.LoadPlugin.*;
 
 
+import org.galaxystudios.dungeonCreate.MythicIntegration.ItemManager;
 import org.galaxystudios.dungeonCreate.MythicIntegration.MythicMobKilledListener;
 import org.galaxystudios.dungeonCreate.MythicIntegration.MythicMobSpawnListener;
 import org.galaxystudios.dungeonCreate.Listeners.PlayerStatUpdateListener;
 import org.mineacademy.fo.plugin.SimplePlugin;
+
+import static org.galaxystudios.dungeonCreate.LoadPlugin.LoadItems.loadedItems;
 
 
 public final class DungeonCreate extends SimplePlugin {
 
     @Override
     public void onPluginStart() {
+        //Has to be first
+        LoadItems.register();
+        for (String key : loadedItems.keySet()) {
+            ItemManager.registerCustomItem(key, loadedItems.get(key));
+        }
+
+
         //Listeners
         getServer().getPluginManager().registerEvents(new MythicMobSpawnListener(), this);
         getServer().getPluginManager().registerEvents(new DamageDoneListener(), this);
@@ -28,7 +38,6 @@ public final class DungeonCreate extends SimplePlugin {
 
 
         //Loading classes
-        LoadItems.register();
         LoadEntityElements.getInstance().load();
         LoadElementBeatsMap.load();
         LoadElementArmor.register();
