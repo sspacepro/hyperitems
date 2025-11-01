@@ -2,9 +2,7 @@ package org.galaxystudios.dungeonCreate.LoadPlugin;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,6 +10,9 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.bukkit.inventory.SmithingTransformRecipe;
+import org.bukkit.inventory.RecipeChoice;
+
 
 import java.io.File;
 import java.util.*;
@@ -22,6 +23,11 @@ import java.util.*;
 public class LoadItems {
 
     private static final Map<String, ItemStack> loadedItems = new HashMap<>();
+
+    public static void registerCustomItem(String key, ItemStack item) {
+        if (key == null || item == null) return;
+        loadedItems.put(key.toLowerCase(), item.clone());
+    }
 
     /** Retrieve a loaded item by key (case-insensitive). */
     public static ItemStack getItem(String key) {
@@ -34,11 +40,11 @@ public class LoadItems {
     public static ItemStack resolveItem(String name) {
         if (name == null) return null;
 
-        // Try custom item
+        // Try custom item first
         ItemStack custom = getItem(name);
         if (custom != null) return custom;
 
-        // Fallback to vanilla material
+        // Fallback to vanilla Material
         Material mat = Material.matchMaterial(name.toUpperCase());
         return mat != null ? new ItemStack(mat) : null;
     }
@@ -47,7 +53,7 @@ public class LoadItems {
     public static void register() {
         Plugin plugin = Bukkit.getPluginManager().getPlugin("DungeonCreate");
         if (plugin == null) {
-            Bukkit.getLogger().warning("DungeonCreate plugin instance not found!");
+            Bukkit.getLogger().warning("[DungeonCreate] Plugin instance not found!");
             return;
         }
 
@@ -57,20 +63,20 @@ public class LoadItems {
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection items = config.getConfigurationSection("items");
         if (items == null) {
-            Bukkit.getLogger().warning("No items found in items.yml");
+            Bukkit.getLogger().warning("[DungeonCreate] No items found in items.yml");
             return;
         }
+
+        loadedItems.clear();
 
         for (String key : items.getKeys(false)) {
             try {
                 ConfigurationSection section = items.getConfigurationSection(key);
                 if (section == null) continue;
 
-                Material material = Material.matchMaterial(
-                        section.getString("material", "STONE").toUpperCase()
-                );
+                Material material = Material.matchMaterial(section.getString("material", "STONE").toUpperCase());
                 if (material == null) {
-                    Bukkit.getLogger().warning("Invalid material for item: " + key);
+                    Bukkit.getLogger().warning("[DungeonCreate] Invalid material for item: " + key);
                     continue;
                 }
 
@@ -81,7 +87,7 @@ public class LoadItems {
                 ItemMeta meta = item.getItemMeta();
                 if (meta == null) continue;
 
-                // Name
+                // Display name
                 if (!displayName.isEmpty()) {
                     Component nameComp = LegacyComponentSerializer.legacyAmpersand().deserialize(displayName);
                     meta.displayName(nameComp);
@@ -97,23 +103,25 @@ public class LoadItems {
                 }
 
                 item.setItemMeta(meta);
+
+                // Register custom item
                 loadedItems.put(key.toLowerCase(), item);
 
-                // Recipe
+                // Recipe registration
                 ConfigurationSection recipe = section.getConfigurationSection("recipe");
                 if (recipe != null) registerRecipe(plugin, key, item, recipe);
 
-                Bukkit.getLogger().info("Loaded custom item: " + key);
+                Bukkit.getLogger().info("[DungeonCreate] Loaded custom item: " + key);
             } catch (Exception e) {
-                Bukkit.getLogger().warning("Failed to load item '" + key + "': " + e.getMessage());
+                Bukkit.getLogger().warning("[DungeonCreate] Failed to load item '" + key + "': " + e.getMessage());
                 e.printStackTrace();
             }
         }
     }
 
-    /** Registers a recipe for the given item. Supports crafting, furnace, smithing. */
+    /** Registers a recipe for the given item. Supports crafting, furnace, and smithing. */
     private static void registerRecipe(Plugin plugin, String key, ItemStack result, ConfigurationSection recipe) {
-        String type = recipe.getString("type", "crafting").toLowerCase();
+        String type = recipe.getString("type", "crafting").toLowerCase(Locale.ROOT);
 
         try {
             switch (type) {
@@ -122,14 +130,28 @@ public class LoadItems {
                     ConfigurationSection ingredients = recipe.getConfigurationSection("ingredients");
                     if (shape.isEmpty() || ingredients == null) return;
 
-                    ShapedRecipe shaped = new ShapedRecipe(new NamespacedKey(plugin, key.toLowerCase()), result);
+                    NamespacedKey recipeKey = new NamespacedKey(plugin, key.toLowerCase());
+                    ShapedRecipe shaped = new ShapedRecipe(recipeKey, result);
                     shaped.shape(shape.toArray(new String[0]));
 
                     for (String symbol : ingredients.getKeys(false)) {
-                        String matName = ingredients.getString(symbol);
-                        if (matName == null) continue;
-                        Material mat = Material.matchMaterial(matName.toUpperCase());
-                        if (mat != null) shaped.setIngredient(symbol.charAt(0), mat);
+                        String itemName = ingredients.getString(symbol);
+                        if (itemName == null || itemName.equalsIgnoreCase("nothing")) continue;
+
+                        // Try custom item first
+                        ItemStack customItem = getItem(itemName);
+                        if (customItem != null) {
+                            shaped.setIngredient(symbol.charAt(0), new RecipeChoice.ExactChoice(customItem));
+                            continue;
+                        }
+
+                        // Fallback to Material
+                        Material mat = Material.matchMaterial(itemName.toUpperCase());
+                        if (mat != null) {
+                            shaped.setIngredient(symbol.charAt(0), mat);
+                        } else {
+                            Bukkit.getLogger().warning("[DungeonCreate] Invalid ingredient for item " + key + ": " + itemName);
+                        }
                     }
 
                     Bukkit.addRecipe(shaped);
@@ -141,15 +163,12 @@ public class LoadItems {
                     int time = recipe.getInt("time", recipe.getInt("cookingTime", 200));
                     if (input == null) return;
 
-                    Material inputMat = Material.matchMaterial(input.toUpperCase());
-                    if (inputMat == null) return;
+                    ItemStack inputItem = resolveItem(input);
+                    if (inputItem == null) return;
 
+                    NamespacedKey keyName = new NamespacedKey(plugin, key.toLowerCase());
                     FurnaceRecipe furnace = new FurnaceRecipe(
-                            new NamespacedKey(plugin, key.toLowerCase()),
-                            result,
-                            inputMat,
-                            (float) exp,
-                            time
+                            keyName, result, inputItem.getType(), (float) exp, time
                     );
                     Bukkit.addRecipe(furnace);
                 }
@@ -157,26 +176,30 @@ public class LoadItems {
                 case "smithing" -> {
                     String base = recipe.getString("base");
                     String addition = recipe.getString("addition");
-                    if (base == null || addition == null) return;
+                    String template = recipe.getString("template");
+                    if (base == null || addition == null || template == null) return;
+                    ItemStack templateItem = resolveItem(template);
+                    ItemStack baseItem = resolveItem(base);
+                    ItemStack addItem = resolveItem(addition);
+                    if (baseItem == null || addItem == null) return;
 
-                    Material baseMat = Material.matchMaterial(base.toUpperCase());
-                    Material addMat = Material.matchMaterial(addition.toUpperCase());
-                    if (baseMat == null || addMat == null) return;
-
+                    NamespacedKey keyName = new NamespacedKey(plugin, key.toLowerCase());
                     SmithingTransformRecipe smithing = new SmithingTransformRecipe(
-                            new NamespacedKey(plugin, key.toLowerCase()),
+                            keyName,
                             result,
-                            new RecipeChoice.MaterialChoice(baseMat),
-                            new RecipeChoice.MaterialChoice(addMat),
-                            new RecipeChoice.MaterialChoice(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE)
+                            new RecipeChoice.ExactChoice(templateItem),
+                            new RecipeChoice.ExactChoice(baseItem),
+                            new RecipeChoice.ExactChoice(addItem)
                     );
                     Bukkit.addRecipe(smithing);
+
                 }
 
-                default -> Bukkit.getLogger().warning("Unknown recipe type for " + key + ": " + type);
+                default -> Bukkit.getLogger().warning("[DungeonCreate] Unknown recipe type for " + key + ": " + type);
             }
         } catch (Exception e) {
-            Bukkit.getLogger().warning("Failed to register recipe for " + key + ": " + e.getMessage());
+            Bukkit.getLogger().warning("[DungeonCreate] Failed to register recipe for " + key + ": " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

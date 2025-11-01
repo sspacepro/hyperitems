@@ -23,6 +23,7 @@ import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.galaxystudios.dungeonCreate.DungeonCreate;
+import org.galaxystudios.dungeonCreate.MythicIntegration.ItemManager;
 
 import java.io.File;
 import java.util.*;
@@ -33,9 +34,7 @@ public class LoadElementArmor {
         DungeonCreate plugin = (DungeonCreate) DungeonCreate.getInstance();
 
         File file = new File(plugin.getDataFolder(), "armors.yml");
-        if (!file.exists()) {
-            plugin.saveResource("armors.yml", false);
-        }
+        if (!file.exists()) plugin.saveResource("armors.yml", false);
 
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
         ConfigurationSection armors = config.getConfigurationSection("armors");
@@ -46,6 +45,7 @@ public class LoadElementArmor {
             if (section == null) continue;
 
             try {
+                // Basic info
                 Material material = Material.valueOf(section.getString("material", "LEATHER_CHESTPLATE").toUpperCase());
                 String displayName = section.getString("name", key);
 
@@ -88,26 +88,20 @@ public class LoadElementArmor {
                         section.getDouble("stats.lifesteal", 0)
                 );
 
+                // Build the item
+                ItemStack result = applyArmorPiece(
+                        plugin, material, displayName, nameColor,
+                        element, elementColor, flavor, color,
+                        new ArmorTrim(trimMaterial, trimPattern),
+                        armor, toughness, stats, durability
+                );
+
+                // Register in ItemManager
+                ItemManager.registerCustomItem(key, result);
+
                 // Recipe
                 List<String> shape = section.getStringList("recipe.shape");
                 ConfigurationSection ingredients = section.getConfigurationSection("recipe.ingredients");
-
-                ItemStack result = applyArmorPiece(
-                        plugin,
-                        material,
-                        displayName,
-                        nameColor,
-                        element,
-                        elementColor,
-                        flavor,
-                        color,
-                        new ArmorTrim(trimMaterial, trimPattern),
-                        armor,
-                        toughness,
-                        stats,
-                        durability
-                );
-
                 if (!shape.isEmpty() && ingredients != null) {
                     registerRecipe(plugin, key, result, shape, ingredients);
                 }
@@ -135,16 +129,18 @@ public class LoadElementArmor {
             int durability
     ) {
         ItemStack item = new ItemStack(material);
-        ItemMeta baseMeta = item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
 
-        if (baseMeta instanceof ColorableArmorMeta colorMeta) {
+        if (meta instanceof ColorableArmorMeta colorMeta) {
             colorMeta.setColor(color);
-            baseMeta = colorMeta;
+            meta = colorMeta;
         }
 
-        // Name
-        Component displayNameComponent = LegacyComponentSerializer.legacyAmpersand().deserialize(displayName);
-        baseMeta.displayName(displayNameComponent.decoration(TextDecoration.ITALIC, false));
+        // Display name
+        Component displayNameComponent = LegacyComponentSerializer.legacyAmpersand()
+                .deserialize(displayName)
+                .decoration(TextDecoration.ITALIC, false);
+        meta.displayName(displayNameComponent);
 
         // Lore
         List<Component> lore = new ArrayList<>();
@@ -162,10 +158,10 @@ public class LoadElementArmor {
         lore.add(Component.text("☘ Luck: +" + stats.luck(), NamedTextColor.GREEN));
         lore.add(Component.text("✦ Speed: +" + stats.speed(), NamedTextColor.AQUA));
         lore.add(Component.text("❤ Lifesteal: +" + stats.lifesteal() + "%", NamedTextColor.LIGHT_PURPLE));
-        baseMeta.lore(lore);
+        meta.lore(lore);
 
-        // Persistent Data
-        PersistentDataContainer data = baseMeta.getPersistentDataContainer();
+        // Persistent data
+        PersistentDataContainer data = meta.getPersistentDataContainer();
         data.set(new NamespacedKey(plugin, "elementType"), PersistentDataType.STRING, elementName.toLowerCase());
         data.set(new NamespacedKey(plugin, "hp"), PersistentDataType.DOUBLE, stats.hp());
         data.set(new NamespacedKey(plugin, "damage"), PersistentDataType.DOUBLE, stats.damage());
@@ -173,37 +169,26 @@ public class LoadElementArmor {
         data.set(new NamespacedKey(plugin, "speed"), PersistentDataType.DOUBLE, stats.speed());
         data.set(new NamespacedKey(plugin, "lifesteal"), PersistentDataType.DOUBLE, stats.lifesteal());
 
-        // Armor Trim (only works for ArmorMeta)
-        if (baseMeta instanceof ArmorMeta armorMeta) {
+        if (meta instanceof ArmorMeta armorMeta) {
             armorMeta.setTrim(trim);
         }
 
-        // Safe Namespaced Keys
+        // Attributes
         String safeKey = displayName.toLowerCase().replaceAll("[^a-z0-9_.-]", "_");
-
-        // Armor Attribute
-        NamespacedKey armorKey = new NamespacedKey(plugin, safeKey + "_armor");
-        AttributeModifier armorModifier = new AttributeModifier(
-                armorKey,
+        meta.addAttributeModifier(Attribute.ARMOR, new AttributeModifier(
+                new NamespacedKey(plugin, safeKey + "_armor"),
                 armor,
                 AttributeModifier.Operation.ADD_NUMBER,
                 EquipmentSlotGroup.ARMOR
-        );
-        baseMeta.addAttributeModifier(Attribute.ARMOR, armorModifier);
-
-        // Toughness Attribute
-        NamespacedKey toughnessKey = new NamespacedKey(plugin, safeKey + "_toughness");
-        AttributeModifier toughnessModifier = new AttributeModifier(
-                toughnessKey,
+        ));
+        meta.addAttributeModifier(Attribute.ARMOR_TOUGHNESS, new AttributeModifier(
+                new NamespacedKey(plugin, safeKey + "_toughness"),
                 toughness,
                 AttributeModifier.Operation.ADD_NUMBER,
                 EquipmentSlotGroup.ARMOR
-        );
-        baseMeta.addAttributeModifier(Attribute.ARMOR_TOUGHNESS, toughnessModifier);
+        ));
 
-
-        item.setItemMeta(baseMeta);
-        // Durability
+        item.setItemMeta(meta);
         item.setData(DataComponentTypes.MAX_DAMAGE, durability >= 0 ? durability : material.getMaxDurability());
         return item;
     }
@@ -215,10 +200,23 @@ public class LoadElementArmor {
             recipe.shape(shape.toArray(new String[0]));
 
             for (String symbol : ingredients.getKeys(false)) {
-                String matName = ingredients.getString(symbol);
-                if (matName == null) continue;
-                Material mat = Material.matchMaterial(matName.toUpperCase());
-                if (mat != null) recipe.setIngredient(symbol.charAt(0), mat);
+                String ingredientName = ingredients.getString(symbol);
+                if (ingredientName == null || ingredientName.equalsIgnoreCase("nothing")) continue;
+
+                // Use ItemManager for all custom ingredients
+                ItemStack customItem = ItemManager.getCustomItem(ingredientName);
+                if (customItem != null) {
+                    recipe.setIngredient(symbol.charAt(0), new RecipeChoice.ExactChoice(customItem));
+                    continue;
+                }
+
+                // Fallback to vanilla material
+                Material mat = Material.matchMaterial(ingredientName.toUpperCase());
+                if (mat != null) {
+                    recipe.setIngredient(symbol.charAt(0), mat);
+                } else {
+                    Bukkit.getLogger().warning("[DungeonCreate] Invalid ingredient: " + ingredientName);
+                }
             }
 
             Bukkit.addRecipe(recipe);

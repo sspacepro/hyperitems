@@ -28,7 +28,10 @@ items:
   upgraded_core:
     material: NETHER_STAR
     name: "&dUpgraded Core"
+    lore:
+      - "&7An essential component for powerful upgrades."
     recipe:
       type: smithing
+      template: NETHERITE_UPGRADE_SMITHING_TEMPLATE
       base: DIAMOND
       addition: NETHER_STAR
