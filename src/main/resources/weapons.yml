@@ -14,7 +14,7 @@ weapons:
 
     stats:
       damage: 3
-      luck: 1
+      critchance: 1
       speed: 0.5
       lifesteal: 5
 
@@ -42,7 +42,7 @@ weapons:
 
     stats:
       damage: 4
-      luck: 0
+      critchance: 0
       speed: 0.3
       lifesteal: 2
 
@@ -71,7 +71,7 @@ weapons:
 
     stats:
       damage: 99
-      luck: 100
+      critchance: 100
       speed: 10.0
       lifesteal: 100
 

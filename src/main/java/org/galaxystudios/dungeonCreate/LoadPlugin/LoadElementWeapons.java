@@ -70,7 +70,7 @@ public class LoadElementWeapons {
 
                 CustomStats stats = new CustomStats(
                         section.getDouble("stats.damage", 0),
-                        section.getDouble("stats.luck", 0),
+                        section.getDouble("stats.critchance", 0),
                         section.getDouble("stats.speed", 0),
                         section.getDouble("stats.lifesteal", 0)
                 );
@@ -136,7 +136,7 @@ public class LoadElementWeapons {
         lore.add(Component.text(""));
         lore.add(Component.text("Stats:", NamedTextColor.GOLD).decoration(TextDecoration.ITALIC, false));
         lore.add(Component.text("⚔ Damage: +" + stats.damage(), NamedTextColor.DARK_RED));
-        lore.add(Component.text("☘ Luck: +" + stats.luck(), NamedTextColor.GREEN));
+        lore.add(Component.text("☘ Crit Chance: +" + stats.critchance(), NamedTextColor.GREEN));
         lore.add(Component.text("✦ Speed: +" + stats.speed(), NamedTextColor.AQUA));
         lore.add(Component.text("❤ Lifesteal: +" + stats.lifesteal() + "%", NamedTextColor.LIGHT_PURPLE));
         meta.lore(lore);
@@ -145,7 +145,7 @@ public class LoadElementWeapons {
         PersistentDataContainer data = meta.getPersistentDataContainer();
         data.set(new NamespacedKey(plugin, "elementType"), PersistentDataType.STRING, elementName.toLowerCase());
         data.set(new NamespacedKey(plugin, "damage"), PersistentDataType.DOUBLE, stats.damage());
-        data.set(new NamespacedKey(plugin, "luck"), PersistentDataType.DOUBLE, stats.luck());
+        data.set(new NamespacedKey(plugin, "critchance"), PersistentDataType.DOUBLE, stats.critchance());
         data.set(new NamespacedKey(plugin, "speed"), PersistentDataType.DOUBLE, stats.speed());
         data.set(new NamespacedKey(plugin, "lifesteal"), PersistentDataType.DOUBLE, stats.lifesteal());
 
@@ -200,5 +200,5 @@ public class LoadElementWeapons {
         }
     }
 
-    private record CustomStats(double damage, double luck, double speed, double lifesteal) {}
+    private record CustomStats(double damage, double critchance, double speed, double lifesteal) {}
 }

@@ -59,7 +59,7 @@ public class DamageDoneListener implements Listener {
         double damage = baseDamage * elementMultiplier;
 
         // isCritical Hit?
-        double critChance = attackerStats.luck;
+        double critChance = attackerStats.critchance;
         boolean isCrit = Math.random() * 100 < critChance;
         // --- Player lifesteal, damage bonus, critical ---
         if (attacker instanceof Player player) {
@@ -201,9 +201,9 @@ public class DamageDoneListener implements Listener {
             return new EntityStats(0, 0, 0, elements);
         }
 
-        // Player stats (damage, luck, lifesteal)
+        // Player stats (damage, critchance, lifesteal)
         double totalDamage = 0;
-        double totalLuck = 0;
+        double totalCritChance = 0;
         double totalLifesteal = 0;
         Set<String> elements = new HashSet<>();
 
@@ -212,7 +212,7 @@ public class DamageDoneListener implements Listener {
         if (!mainHand.isEmpty() && mainHand.hasItemMeta()) {
             PersistentDataContainer data = mainHand.getItemMeta().getPersistentDataContainer();
             totalDamage += data.getOrDefault(key("damage"), PersistentDataType.DOUBLE, 0.0);
-            totalLuck += data.getOrDefault(key("luck"), PersistentDataType.DOUBLE, 0.0);
+            totalCritChance += data.getOrDefault(key("critchance"), PersistentDataType.DOUBLE, 0.0);
             totalLifesteal += data.getOrDefault(key("lifesteal"), PersistentDataType.DOUBLE, 0.0);
 
             String mainElement = data.get(key("elementType"), PersistentDataType.STRING);
@@ -234,17 +234,17 @@ public class DamageDoneListener implements Listener {
             }
         }
 
-        return new EntityStats(totalDamage, totalLuck, totalLifesteal, elements);
+        return new EntityStats(totalDamage, totalCritChance, totalLifesteal, elements);
     }
 
     private NamespacedKey key(String name) {
         return new NamespacedKey(DungeonCreate.getInstance(), name);
     }
 
-    private record EntityStats(double damage, double luck, double lifesteal, Set<String> elements) {
+    private record EntityStats(double damage, double critchance, double lifesteal, Set<String> elements) {
         @Override
         public @NotNull String toString() {
-            return "Damage=" + damage + ", Luck=" + luck + ", Lifesteal=" + lifesteal +
+            return "Damage=" + damage + ", critchance=" + critchance + ", Lifesteal=" + lifesteal +
                     ", Elements=" + elements;
         }
     }

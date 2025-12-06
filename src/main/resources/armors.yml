@@ -20,7 +20,7 @@ armors:
     stats:
       hp: 6
       damage: 2
-      luck: 0
+      critchance: 0
       speed: 0
       lifesteal: 1
     recipe:
@@ -53,7 +53,7 @@ armors:
     stats:
       hp: 4
       damage: 0
-      luck: 2
+      critchance: 2
       speed: 1
       lifesteal: 0
     recipe:
