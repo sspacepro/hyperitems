@@ -4,6 +4,7 @@ items:
     name: "&eMagic Dust"
     lore:
       - "&7A shimmering powder used in crafting."
+    texture: pack_model
     recipe:
       type: crafting
       shape:
@@ -19,6 +20,7 @@ items:
     name: "&6Molten Ingot"
     lore:
       - "&7Smelted from the purest ores."
+    texture: pack_model
     recipe:
       type: furnace
       input: RAW_IRON
@@ -30,6 +32,7 @@ items:
     name: "&dUpgraded Core"
     lore:
       - "&7An essential component for powerful upgrades."
+    texture: pack_model
     recipe:
       type: smithing
       template: NETHERITE_UPGRADE_SMITHING_TEMPLATE

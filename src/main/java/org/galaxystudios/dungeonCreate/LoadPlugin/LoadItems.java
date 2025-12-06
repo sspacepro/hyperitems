@@ -1,5 +1,6 @@
 package org.galaxystudios.dungeonCreate.LoadPlugin;
 
+import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
@@ -83,8 +84,10 @@ public class LoadItems {
 
                 String displayName = section.getString("name", key);
                 List<String> loreList = section.getStringList("lore");
-
+                String id = section.getString("texture", "pack_model");
                 ItemStack item = new ItemStack(material);
+                // Set a custom model data value on this item
+                item.setData(DataComponentTypes.ITEM_MODEL, new NamespacedKey("dcpack", id));
                 ItemMeta meta = item.getItemMeta();
                 if (meta == null) continue;
 
@@ -102,6 +105,7 @@ public class LoadItems {
                     }
                     meta.lore(loreComp);
                 }
+
 
                 item.setItemMeta(meta);
 
