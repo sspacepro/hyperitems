@@ -48,11 +48,11 @@ public final class DungeonCreate extends SimplePlugin {
 
 
         //Files
-        // Make it so this will only run on the first start not every time the plugin restarts
-        saveResource("EntityElements.yml", false);
-        saveResource("armors.yml",false);
-        saveResource("weapons.yml",false);
-        saveResource("items.yml", false);
+        // Only for development: ensures default config files are present
+        saveResource("EntityElements.yml", true);
+        saveResource("armors.yml",true);
+        saveResource("weapons.yml",true);
+        saveResource("items.yml", true);
     }
 
     @Override
