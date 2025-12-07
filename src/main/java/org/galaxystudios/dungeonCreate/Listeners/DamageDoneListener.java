@@ -195,9 +195,9 @@ public class DamageDoneListener implements Listener {
 
         if (!(entity instanceof Player player)) {
             // Mob: element only
-            String mobElement = loader.getMobElementMap().getOrDefault(entity.getType().name(), "None");
+            String mobElement = loader.getMobElementMap().getOrDefault(entity.getType().name(), "Null");
             Set<String> elements = new HashSet<>();
-            if (!mobElement.equalsIgnoreCase("None")) elements.add(mobElement);
+            if (!mobElement.equalsIgnoreCase("Null")) elements.add(mobElement);
             return new EntityStats(0, 0, 0, elements);
         }
 
@@ -229,7 +229,7 @@ public class DamageDoneListener implements Listener {
 
             String pieceElement = armorPiece.getItemMeta().getPersistentDataContainer()
                     .get(key("elementType"), PersistentDataType.STRING);
-            if (pieceElement != null && !Objects.equals(pieceElement, "None")) {
+            if (pieceElement != null && !Objects.equals(pieceElement, "Null")) {
                 elements.add(pieceElement);
             }
         }
