@@ -1,6 +1,6 @@
 name: dungeonCreate
 version: '1.0.0-Alpha'
-main: org.galaxystudios.dungeonCreate.hyperitems
+main: org.galaxystudios.hyperitems.hyperitems
 api-version: '1.21'
 depend: [ MythicMobs ]
 

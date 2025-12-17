@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate.LoadPlugin;
+package org.galaxystudios.hyperitems.LoadPlugin;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.text.Component;

@@ -56,7 +56,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.mineacademy.fo</pattern>
-                            <shadedPattern>org.galaxystudios.dungeonCreate.lib</shadedPattern>
+                            <shadedPattern>org.galaxystudios.hyperitems.lib</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate.MythicIntegration;
+package org.galaxystudios.hyperitems.MythicIntegration;
 
 import io.lumine.mythic.bukkit.events.MythicMobDeathEvent;
 import org.bukkit.Bukkit;
@@ -13,7 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.galaxystudios.dungeonCreate.LoadPlugin.LoadItems;
+import org.galaxystudios.hyperitems.LoadPlugin.LoadItems;
 
 import java.io.File;
 import java.util.*;

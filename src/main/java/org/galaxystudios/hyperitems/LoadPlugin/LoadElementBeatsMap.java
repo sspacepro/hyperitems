@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate.LoadPlugin;
+package org.galaxystudios.hyperitems.LoadPlugin;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -1,7 +1,7 @@
-package org.galaxystudios.dungeonCreate.LoadPlugin;
+package org.galaxystudios.hyperitems.LoadPlugin;
 
 import lombok.Getter;
-import org.galaxystudios.dungeonCreate.hyperitems;
+import org.galaxystudios.hyperitems.hyperitems;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;

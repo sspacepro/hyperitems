@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate.Listeners;
+package org.galaxystudios.hyperitems.Listeners;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

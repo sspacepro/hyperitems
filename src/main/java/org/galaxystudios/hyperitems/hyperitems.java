@@ -1,20 +1,20 @@
-package org.galaxystudios.dungeonCreate;
+package org.galaxystudios.hyperitems;
 
 
 
 
-import org.galaxystudios.dungeonCreate.Listeners.BlockTrimmingLeatherListener;
-import org.galaxystudios.dungeonCreate.Listeners.DamageDoneListener;
-import org.galaxystudios.dungeonCreate.LoadPlugin.*;
+import org.galaxystudios.hyperitems.Listeners.BlockTrimmingLeatherListener;
+import org.galaxystudios.hyperitems.Listeners.DamageDoneListener;
+import org.galaxystudios.hyperitems.LoadPlugin.*;
 
 
-import org.galaxystudios.dungeonCreate.MythicIntegration.ItemManager;
-import org.galaxystudios.dungeonCreate.MythicIntegration.MythicMobKilledListener;
-import org.galaxystudios.dungeonCreate.MythicIntegration.MythicMobSpawnListener;
-import org.galaxystudios.dungeonCreate.Listeners.PlayerStatUpdateListener;
+import org.galaxystudios.hyperitems.MythicIntegration.ItemManager;
+import org.galaxystudios.hyperitems.MythicIntegration.MythicMobKilledListener;
+import org.galaxystudios.hyperitems.MythicIntegration.MythicMobSpawnListener;
+import org.galaxystudios.hyperitems.Listeners.PlayerStatUpdateListener;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
-import static org.galaxystudios.dungeonCreate.LoadPlugin.LoadItems.loadedItems;
+import static org.galaxystudios.hyperitems.LoadPlugin.LoadItems.loadedItems;
 
 
 public final class hyperitems extends SimplePlugin {

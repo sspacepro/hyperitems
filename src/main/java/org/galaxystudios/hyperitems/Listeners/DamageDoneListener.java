@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate.Listeners;
+package org.galaxystudios.hyperitems.Listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -11,9 +11,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.galaxystudios.dungeonCreate.hyperitems;
-import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
-import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementBeatsMap;
+import org.galaxystudios.hyperitems.hyperitems;
+import org.galaxystudios.hyperitems.LoadPlugin.LoadEntityElements;
+import org.galaxystudios.hyperitems.LoadPlugin.LoadElementBeatsMap;
 import org.jetbrains.annotations.NotNull;
 import net.kyori.adventure.text.Component;
 

@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate.MythicIntegration;
+package org.galaxystudios.hyperitems.MythicIntegration;
 
 import io.lumine.mythic.api.mobs.MythicMob;
 import io.lumine.mythic.api.skills.placeholders.PlaceholderString;
@@ -8,8 +8,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
-import org.galaxystudios.dungeonCreate.hyperitems;
-import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
+import org.galaxystudios.hyperitems.hyperitems;
+import org.galaxystudios.hyperitems.LoadPlugin.LoadEntityElements;
 
 
 import java.util.Map;

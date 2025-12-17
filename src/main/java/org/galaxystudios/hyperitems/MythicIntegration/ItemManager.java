@@ -1,4 +1,4 @@
-package org.galaxystudios.dungeonCreate.MythicIntegration;
+package org.galaxystudios.hyperitems.MythicIntegration;
 
 import org.bukkit.inventory.ItemStack;
 
