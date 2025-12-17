@@ -9,7 +9,7 @@
     <version>1.0.0-Alpha</version>
     <packaging>jar</packaging>
 
-    <name>dungeoncreate</name>
+    <name>hyperitems</name>
 
     <properties>
         <java.version>21</java.version>

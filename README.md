@@ -1,6 +1,6 @@
-# DungeonCreate
+# HyperItems
 
-DungeonCreate is a Minecraft (Paper) server plugin focused on procedurally-generated or custom dungeon content, custom items, and MythicMobs integration. This repository contains the plugin source code, resource files (items, weapons, armors, entity element mappings), and build configuration for packaging a deployable plugin JAR.
+HyperItems is a Minecraft (Paper) server plugin focused on procedurally-generated or custom dungeon content, custom items, and MythicMobs integration. This repository contains the plugin source code, resource files (items, weapons, armors, entity element mappings), and build configuration for packaging a deployable plugin JAR.
 
 # [License](./LICENSE)
 Copyright (C) 2025 Galaxy Studios
