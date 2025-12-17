@@ -18,7 +18,7 @@ import static org.galaxystudios.hyperitems.LoadPlugin.LoadItems.loadedItems;
 
 
 public final class hyperitems extends SimplePlugin {
-
+// TEST
     @Override
     public void onPluginStart() {
         //Has to be first
