@@ -22,7 +22,7 @@ import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.galaxystudios.dungeonCreate.DungeonCreate;
+import org.galaxystudios.dungeonCreate.hyperitems;
 import org.galaxystudios.dungeonCreate.MythicIntegration.ItemManager;
 
 import java.io.File;
@@ -31,7 +31,7 @@ import java.util.*;
 public class LoadElementArmor {
 
     public static void register() {
-        DungeonCreate plugin = (DungeonCreate) DungeonCreate.getInstance();
+        hyperitems plugin = (hyperitems) hyperitems.getInstance();
 
         File file = new File(plugin.getDataFolder(), "armors.yml");
         if (!file.exists()) plugin.saveResource("armors.yml", false);
@@ -114,7 +114,7 @@ public class LoadElementArmor {
     }
 
     private static ItemStack applyArmorPiece(
-            DungeonCreate plugin,
+            hyperitems plugin,
             Material material,
             String displayName,
             NamedTextColor displayColor,
@@ -193,7 +193,7 @@ public class LoadElementArmor {
         return item;
     }
 
-    private static void registerRecipe(DungeonCreate plugin, String key, ItemStack result,
+    private static void registerRecipe(hyperitems plugin, String key, ItemStack result,
                                        List<String> shape, ConfigurationSection ingredients) {
         try {
             ShapedRecipe recipe = new ShapedRecipe(new NamespacedKey(plugin, key.toLowerCase()), result);

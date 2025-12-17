@@ -18,7 +18,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.galaxystudios.dungeonCreate.DungeonCreate;
+import org.galaxystudios.dungeonCreate.hyperitems;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,12 +26,12 @@ import java.util.Objects;
 
 public class PlayerStatUpdateListener implements Listener {
 
-    private final DungeonCreate plugin;
+    private final hyperitems plugin;
 
     // Map to prevent multiple updates in the same tick
     private final Map<Player, Boolean> scheduledUpdates = new HashMap<>();
 
-    public PlayerStatUpdateListener(DungeonCreate plugin) {
+    public PlayerStatUpdateListener(hyperitems plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

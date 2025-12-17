@@ -11,7 +11,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.galaxystudios.dungeonCreate.DungeonCreate;
+import org.galaxystudios.dungeonCreate.hyperitems;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadElementBeatsMap;
 import org.jetbrains.annotations.NotNull;
@@ -104,7 +104,7 @@ public class DamageDoneListener implements Listener {
             stand.setCustomNameVisible(true);
 
             // Optional: float-up animation
-            Bukkit.getScheduler().runTaskTimer(DungeonCreate.getInstance(), task -> {
+            Bukkit.getScheduler().runTaskTimer(hyperitems.getInstance(), task -> {
                 if (!stand.isValid()) {
                     task.cancel();
                     return;
@@ -113,7 +113,7 @@ public class DamageDoneListener implements Listener {
             }, 0L, 1L);
 
             // Remove after 1 second
-            Bukkit.getScheduler().runTaskLater(DungeonCreate.getInstance(), () -> {
+            Bukkit.getScheduler().runTaskLater(hyperitems.getInstance(), () -> {
                 if (stand.isValid()) stand.remove();
             }, 30L);
 
@@ -134,7 +134,7 @@ public class DamageDoneListener implements Listener {
         if (weapon.isEmpty() || !weapon.hasItemMeta()) return 1.0;
 
         String weaponElement = weapon.getItemMeta().getPersistentDataContainer()
-                .get(new NamespacedKey(DungeonCreate.getInstance(), "elementType"), PersistentDataType.STRING);
+                .get(new NamespacedKey(hyperitems.getInstance(), "elementType"), PersistentDataType.STRING);
         if (weaponElement == null) return 1.0;
 
         // Determine fraction per element
@@ -238,7 +238,7 @@ public class DamageDoneListener implements Listener {
     }
 
     private NamespacedKey key(String name) {
-        return new NamespacedKey(DungeonCreate.getInstance(), name);
+        return new NamespacedKey(hyperitems.getInstance(), name);
     }
 
     private record EntityStats(double damage, double critchance, double lifesteal, Set<String> elements) {

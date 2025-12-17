@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.galaxystudios</groupId>
-    <artifactId>dungeoncreate</artifactId>
+    <artifactId>hyperitems</artifactId>
     <version>1.0.0-Alpha</version>
     <packaging>jar</packaging>
 

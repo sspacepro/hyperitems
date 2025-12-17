@@ -17,7 +17,7 @@ import org.mineacademy.fo.plugin.SimplePlugin;
 import static org.galaxystudios.dungeonCreate.LoadPlugin.LoadItems.loadedItems;
 
 
-public final class DungeonCreate extends SimplePlugin {
+public final class hyperitems extends SimplePlugin {
 
     @Override
     public void onPluginStart() {

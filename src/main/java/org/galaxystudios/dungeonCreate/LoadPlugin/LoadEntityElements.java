@@ -1,7 +1,7 @@
 package org.galaxystudios.dungeonCreate.LoadPlugin;
 
 import lombok.Getter;
-import org.galaxystudios.dungeonCreate.DungeonCreate;
+import org.galaxystudios.dungeonCreate.hyperitems;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.InputStream;
@@ -50,7 +50,7 @@ public class LoadEntityElements {
                 }
             }
         } catch (Exception e) {
-            DungeonCreate.getInstance().getLogger().severe("Error loading EntityElements.yml: " + e.getMessage());
+            hyperitems.getInstance().getLogger().severe("Error loading EntityElements.yml: " + e.getMessage());
         }
     }
 

@@ -16,7 +16,7 @@ Quick overview
 
 Repository layout
 - pom.xml - Maven build file (targets Java 21 and shades Foundation)
-- src/main/java/... - plugin source code (main class: org.galaxystudios.dungeonCreate.DungeonCreate)
+- src/main/java/... - plugin source code (main class: org.galaxystudios.dungeonCreate.hyperitems)
 - src/main/resources - runtime resource YAMLs used by the plugin
   - items.yml, weapons.yml, armors.yml, EntityElements.yml, drops.yml, plugin.yml
 
@@ -48,7 +48,7 @@ Configuration & data files
 - Edit these YAML files in your server's `plugins/dungeonCreate` folder to add or tweak custom items, weapons, armors and entity element mappings.
 
 Development notes
-- Main class: `org.galaxystudios.dungeonCreate.DungeonCreate` (extends `SimplePlugin` from Foundation).
+- Main class: `org.galaxystudios.dungeonCreate.hyperitems` (extends `SimplePlugin` from Foundation).
 - Custom items are loaded via `LoadItems.register()` and registered with `MythicIntegration.ItemManager`.
 - The plugin registers listeners for MythicMob spawn/killed events and for player/item interactions. Look in `src/main/java/org/galaxystudios/dungeonCreate/Listeners` and `MythicIntegration` for behavior.
 - To reload plugin-specific data without restarting the server, the plugin exposes `onPluginReload()` which re-loads several element definitions.

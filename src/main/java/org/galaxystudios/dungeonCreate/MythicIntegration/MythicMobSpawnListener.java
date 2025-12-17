@@ -8,7 +8,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
-import org.galaxystudios.dungeonCreate.DungeonCreate;
+import org.galaxystudios.dungeonCreate.hyperitems;
 import org.galaxystudios.dungeonCreate.LoadPlugin.LoadEntityElements;
 
 
@@ -27,7 +27,7 @@ public class MythicMobSpawnListener implements Listener {
         if (element == null) {
             return;
         }
-        final NamespacedKey key = new NamespacedKey(DungeonCreate.getInstance(), "element");
+        final NamespacedKey key = new NamespacedKey(hyperitems.getInstance(), "element");
         Entity entity = event.getMob().getEntity().getBukkitEntity();
         entity.getPersistentDataContainer().set(key, PersistentDataType.STRING, element);
 
