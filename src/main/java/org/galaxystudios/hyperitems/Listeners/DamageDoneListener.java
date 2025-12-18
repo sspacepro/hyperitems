@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.galaxystudios.hyperitems.hyperitems;
-import org.galaxystudios.hyperitems.LoadPlugin.LoadEntityElements;
 import org.galaxystudios.hyperitems.LoadPlugin.LoadElementBeatsMap;
 import org.jetbrains.annotations.NotNull;
 import net.kyori.adventure.text.Component;
@@ -191,15 +190,21 @@ public class DamageDoneListener implements Listener {
 
     // --- Gather stats from entity ---
     private EntityStats getEntityStats(LivingEntity entity) {
-        LoadEntityElements loader = LoadEntityElements.getInstance();
 
         if (!(entity instanceof Player player)) {
-            // Mob: element only
-            String mobElement = loader.getMobElementMap().getOrDefault(entity.getType().name(), "Null");
+            NamespacedKey key = new NamespacedKey("hyperdungeon", "element");
+            PersistentDataContainer pdc = entity.getPersistentDataContainer();
+
+            String mobElement = pdc.get(key, PersistentDataType.STRING);
+
             Set<String> elements = new HashSet<>();
-            if (!mobElement.equalsIgnoreCase("Null")) elements.add(mobElement);
+            if (mobElement != null) {
+                elements.add(mobElement);
+            }
+
             return new EntityStats(0, 0, 0, elements);
         }
+
 
         // Player stats (damage, critchance, lifesteal)
         double totalDamage = 0;
