@@ -44,13 +44,13 @@ Install (server)
 
 Configuration & data files
 - On first run (or during development), the plugin saves default resources for:
-  - `EntityElements.yml`, `armors.yml`, `weapons.yml`, `items.yml` (see `DungeonCreate#onPluginStart`).
-- Edit these YAML files in your server's `plugins/dungeonCreate` folder to add or tweak custom items, weapons, armors and entity element mappings.
+  - `EntityElements.yml`, `armors.yml`, `weapons.yml`, `items.yml` (see `hyperItems#onPluginStart`).
+- Edit these YAML files in your server's `plugins/hyperItems` folder to add or tweak custom items, weapons, armors and entity element mappings.
 
 Development notes
 - Main class: `org.galaxystudios.hyperitems.hyperitems` (extends `SimplePlugin` from Foundation).
 - Custom items are loaded via `LoadItems.register()` and registered with `MythicIntegration.ItemManager`.
-- The plugin registers listeners for MythicMob spawn/killed events and for player/item interactions. Look in `src/main/java/org/galaxystudios/dungeonCreate/Listeners` and `MythicIntegration` for behavior.
+- The plugin registers listeners for MythicMob spawn/killed events and for player/item interactions. Look in `src/main/java/org/galaxystudios/hyperItems/Listeners` and `MythicIntegration` for behavior.
 - To reload plugin-specific data without restarting the server, the plugin exposes `onPluginReload()` which re-loads several element definitions.
 
 Contact / Author

@@ -8,23 +8,30 @@ import org.galaxystudios.hyperitems.Listeners.DamageDoneListener;
 import org.galaxystudios.hyperitems.LoadPlugin.*;
 
 
-import org.galaxystudios.hyperitems.MythicIntegration.ItemManager;
+
 import org.galaxystudios.hyperitems.MythicIntegration.MythicMobKilledListener;
 import org.galaxystudios.hyperitems.Listeners.PlayerStatUpdateListener;
+
 import org.mineacademy.fo.plugin.SimplePlugin;
 
-import static org.galaxystudios.hyperitems.LoadPlugin.LoadItems.loadedItems;
+
 
 
 public final class hyperitems extends SimplePlugin {
 
     @Override
     public void onPluginStart() {
-        //Has to be first
-        LoadItems.register();
-        for (String key : loadedItems.keySet()) {
-            ItemManager.registerCustomItem(key, loadedItems.get(key));
-        }
+        //Files
+        // Only for development: ensures default config files are present after development switch to false
+        saveResource("armors.yml",true);
+        saveResource("weapons.yml",true);
+        saveResource("items.yml", true);
+        saveResource("drops.yml", true);
+
+
+        //Loading classes
+        UnifiedItemLoader.registerAll();
+        LoadElementBeatsMap.load();
 
 
         //Listeners
@@ -32,23 +39,14 @@ public final class hyperitems extends SimplePlugin {
         getServer().getPluginManager().registerEvents(new PlayerStatUpdateListener(this), this);
         getServer().getPluginManager().registerEvents(new BlockTrimmingLeatherListener(this), this);
         getServer().getPluginManager().registerEvents(new MythicMobKilledListener(this), this);
+
         //commands
 
 
-        //Loading classes
-        LoadElementBeatsMap.load();
-        LoadElementArmor.register();
-        LoadElementWeapons.register();
 
 
 
 
-
-        //Files
-        // Only for development: ensures default config files are present
-        saveResource("armors.yml",true);
-        saveResource("weapons.yml",true);
-        saveResource("items.yml", true);
     }
 
     @Override
@@ -57,8 +55,8 @@ public final class hyperitems extends SimplePlugin {
     }
 
     public void onPluginReload() {
-        LoadElementArmor.register();
-        LoadElementWeapons.register();
+        UnifiedItemLoader.registerAll();
+        LoadElementBeatsMap.load();
 
 
     }

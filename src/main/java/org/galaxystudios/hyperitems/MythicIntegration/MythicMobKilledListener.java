@@ -13,7 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
-import org.galaxystudios.hyperitems.LoadPlugin.LoadItems;
+
 
 import java.io.File;
 import java.util.*;
@@ -53,7 +53,7 @@ public class MythicMobKilledListener implements Listener {
             if (itemKey == null || itemKey.equalsIgnoreCase("NOTHING")) continue;
 
             if (random.nextDouble() <= chance) {
-                ItemStack baseItem = LoadItems.resolveItem(itemKey);
+                ItemStack baseItem = CustomItemRegistry.get(itemKey);
                 if (baseItem == null) {
                     Bukkit.getLogger().warning("Unknown item '" + itemKey + "' for mob " + mobName);
                     continue;

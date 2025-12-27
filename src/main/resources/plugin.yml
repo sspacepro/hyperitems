@@ -1,4 +1,4 @@
-name: dungeonCreate
+name: hyperItems
 version: '1.0.0-Alpha'
 main: org.galaxystudios.hyperitems.hyperitems
 api-version: '1.21'

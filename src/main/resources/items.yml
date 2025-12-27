@@ -3,38 +3,24 @@ items:
     material: GLOWSTONE_DUST
     name: "&eMagic Dust"
     lore:
-      - "&7A shimmering powder used in crafting."
-    texture: pack_model
-    recipe:
-      type: crafting
-      shape:
-        - "GGG"
-        - "GSG"
-        - "GGG"
-      ingredients:
-        G: GLOWSTONE_DUST
-        S: SUGAR
+      - "&7Used everywhere"
+    texture: magic_dust
+    stats:
+      strength: 5
 
   molten_ingot:
     material: IRON_INGOT
     name: "&6Molten Ingot"
-    lore:
-      - "&7Smelted from the purest ores."
-    texture: pack_model
     recipe:
       type: furnace
       input: RAW_IRON
       experience: 0.5
-      time: 200
 
-  upgraded_core:
+  infused_core:
     material: NETHER_STAR
-    name: "&dUpgraded Core"
-    lore:
-      - "&7An essential component for powerful upgrades."
-    texture: pack_model
+    name: "&dInfused Core"
     recipe:
       type: smithing
       template: NETHERITE_UPGRADE_SMITHING_TEMPLATE
-      base: DIAMOND
-      addition: NETHER_STAR
+      base: molten_ingot
+      addition: magic_dust

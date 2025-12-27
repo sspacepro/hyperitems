@@ -2,84 +2,33 @@ weapons:
   flame_sword:
     material: DIAMOND_SWORD
     name: "&cFlame Sword"
-    nameColor: RED
-    element: Fire
-    elementColor: GOLD
-    flavor: "Forged in dragonfire."
-
+    texture: flame_sword
+    element: fire
     attributes:
-      damage: 8.0
+      damage: 9
       attackSpeed: -2.2
-      durability: 1500
-
+      durability: 1200
     stats:
-      damage: 3
-      critchance: 1
-      speed: 0.5
       lifesteal: 5
-
     recipe:
+      type: crafting
       shape:
-        - " F "
-        - " F "
+        - " M "
+        - " M "
         - " S "
       ingredients:
-        F: BLAZE_POWDER
+        M: magic_dust
         S: STICK
-
-  frost_axe:
-    material: IRON_AXE
-    name: "&bFrost Axe"
-    nameColor: AQUA
-    element: Ice
-    elementColor: BLUE
-    flavor: "Chilled to the touch."
-
+  smelted_blade:
+    material: IRON_SWORD
+    name: "&7Smelted Blade"
     attributes:
-      damage: 9.0
-      attackSpeed: -3.0
-      durability: 1000
-
-    stats:
-      damage: 4
-      critchance: 0
-      speed: 0.3
-      lifesteal: 2
-
-    recipe:
-      shape:
-        - "II "
-        - "IS "
-        - " S "
-      ingredients:
-        I: PACKED_ICE
-        S: STICK
-
-
-  just_dead:
-    material: WOODEN_SWORD
-    name: "&7Just Dead"
-    nameColor: WHITE
-    element: Crystal
-    elementColor: DARK_GRAY
-    flavor: "A blade that whispers of the light."
-
-    attributes:
-      damage: 999.0
+      damage: 7
       attackSpeed: -2.4
-      durability: 4
-
-    stats:
-      damage: 99
-      critchance: 100
-      speed: 10.0
-      lifesteal: 100
+      durability: 500
 
     recipe:
-      shape:
-        - " m "
-        - " m "
-        - " S "
-      ingredients:
-        m: magic_dust
-        S: STICK
+      type: furnace
+      input: IRON_INGOT
+      experience: 0.3
+      time: 200
