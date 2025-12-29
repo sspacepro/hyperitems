@@ -44,7 +44,7 @@ Install (server)
 
 Configuration & data files
 - On first run (or during development), the plugin saves default resources for:
-  - `EntityElements.yml`, `armors.yml`, `weapons.yml`, `items.yml` (see `hyperItems#onPluginStart`).
+  - `EntityElements.yml`, `armors.yml`, `weapons.yml`, `items.yml`, `drops.yml` (see `hyperItems#onPluginStart`).
 - Edit these YAML files in your server's `plugins/hyperItems` folder to add or tweak custom items, weapons, armors and entity element mappings.
 
 Development notes
