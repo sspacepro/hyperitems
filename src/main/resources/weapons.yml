@@ -27,7 +27,7 @@ weapons:
       attackSpeed: 100
       durability: 500
     stats:
-      criticalChance: 100
+      critChance: 100
     recipe:
       type: furnace
       input: IRON_INGOT
