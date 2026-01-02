@@ -6,7 +6,7 @@ items:
       - "&7Used everywhere"
     texture: magic_dust
     stats:
-      strength: 999
+      damage: 999
 
   molten_ingot:
     material: IRON_INGOT

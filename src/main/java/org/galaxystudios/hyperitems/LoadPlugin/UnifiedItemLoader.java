@@ -106,9 +106,6 @@ public final class UnifiedItemLoader {
         if (s.contains("stats.lifesteal")) {
             lore.add(Component.text("§d❤ Lifesteal: " + s.getDouble("stats.lifesteal") + "%"));
         }
-        if (s.contains("stats.strength")) {
-            lore.add(Component.text("§4💪 Strength: +" + s.getDouble("stats.strength")));
-        }
 
         // Apply the lore to the ItemMeta
         meta.lore(lore);

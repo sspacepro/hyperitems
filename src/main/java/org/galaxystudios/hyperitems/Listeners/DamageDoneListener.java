@@ -63,7 +63,7 @@ public class DamageDoneListener implements Listener {
         // --- Player lifesteal, damage bonus, critical ---
         if (attacker instanceof Player player) {
 
-            // damage = base damage + (base damage * (damage stat / 20))
+            // damage
             double potentialDamage = damage * (1 + (attackerStats.damage / 20.0));
 
             // Critical hit multiplier
@@ -111,7 +111,7 @@ public class DamageDoneListener implements Listener {
                 stand.teleport(stand.getLocation().add(0, 0.05, 0)); // move slightly upward
             }, 0L, 1L);
 
-            // Remove after 1 second
+            // Remove after 1.5 second 30 ticks
             Bukkit.getScheduler().runTaskLater(hyperitems.getInstance(), () -> {
                 if (stand.isValid()) stand.remove();
             }, 30L);
